@@ -1,0 +1,194 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "teradata-opus-translate"
+version = "1.0.0"
+description = "Convert Helsinki-NLP OPUS / Marian translation models into self-contained ONNX files for deployment to Teradata Vantage via Bring Your Own Model (BYOM)."
+readme = { file = "README.md", content-type = "text/markdown" }
+requires-python = ">=3.12"
+authors = [
+    { name = "Alexander Smirnov", email = "alexander.smirnov@teradata.com" },
+]
+keywords = ["teradata", "byom", "onnx", "translation", "marian", "huggingface", "opus"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Operating System :: POSIX :: Linux",
+    "Operating System :: MacOS",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Database",
+]
+
+# Core runtime dependencies for the public API (``convert_model`` and
+# ``convert_tokenizer``). Pinned to known-good ranges.
+#
+# Notes:
+#
+# * ``teradatasql`` and ``teradataml`` are NOT runtime dependencies. They
+#   are only needed by the operator-facing ``deploy`` and ``parity``
+#   helper modules (``teradatasql``) and the demo notebook
+#   (``teradataml``). Both live in the ``dev`` extra so that
+#   ``pip install teradata-opus-translate`` keeps a minimal footprint.
+# * ``onnxruntime`` is upper-bounded ``<1.22`` for BYOM compatibility.
+#   BYOM 07.00.00.01 ships ``onnxruntime==1.16.3`` whose
+#   ``com.microsoft.BeamSearch`` T5 contrib op enforces the older
+#   3-input encoder pattern (``encoder_input_ids``,
+#   ``encoder_attention_mask``, ``decoder_input_ids``). That same strict
+#   3-input check holds in ORT 1.17 / 1.18 / 1.19 / 1.20 / 1.21; in 1.22
+#   the check was relaxed to accept *either* 2 or 3 inputs. ORT 1.16.3
+#   itself has no py3.12 wheels on PyPI, so ``<1.22`` keeps local
+#   validation aligned with BYOM at install time. The ``byom-compat``
+#   extra below pins exactly. See ``docs/converter-architecture.md`` and
+#   issue #28 for the rationale.
+dependencies = [
+    "transformers>=4.40,<5.0",
+    "torch>=2.2,<3.0",
+    "onnx>=1.16,<2.0",
+    "onnxruntime>=1.17,<1.22",
+    "sentencepiece>=0.2.0,<0.3",
+    "tokenizers>=0.19,<1.0",
+    # Required by ``transformers.MarianTokenizer`` to suppress its
+    # ``UserWarning: Recommended: pip install sacremoses.`` (raised
+    # unconditionally in ``MarianTokenizer.__init__``). Our token-id pipeline
+    # uses SentencePiece directly and does not exercise the legacy Moses
+    # detokenisation path, but installing the package is the cleanest way to
+    # silence the warning without resorting to brittle filter strings, and
+    # future-proofs us if Marian ever does start using it. See issue #23.
+    "sacremoses>=0.1.1,<0.2",
+    "numpy>=1.26,<3.0",
+]
+
+[project.optional-dependencies]
+# Test extra: minimal set required to run ``make test`` (fast unit tests
+# only). Used by the self-hosted CI runner.
+test = [
+    "pytest>=8.0,<9.0",
+    "pytest-cov>=5.0,<6.0",
+]
+# Full developer install: lint, type-check, BYOM-compatible ORT pin, and
+# the Teradata-side helpers (``teradatasql`` is needed to run
+# ``deploy/`` and ``parity/teradata.py``; ``teradataml`` is needed by the
+# demo notebook only — but is pulled in here so contributors can execute
+# the notebook without installing a second extra).
+dev = [
+    "pytest>=8.0,<9.0",
+    "pytest-cov>=5.0,<6.0",
+    "ruff>=0.5,<1.0",
+    "mypy>=1.10,<2.0",
+    # Pinned to keep local validation aligned with BYOM 07.00.00.01's
+    # bundled onnxruntime 1.16.3. 1.21.x is the highest version that still
+    # *strictly* enforces the 3-input T5 encoder ``Validate()`` check
+    # (``num_subgraph_inputs != 3``) that BYOM 1.16.3 also enforces; from
+    # 1.22 onward the check is relaxed to accept either 2 or 3 inputs,
+    # which would let us silently regress to a BYOM-incompatible artifact.
+    # 1.16.3 itself has no py3.12 wheels on PyPI, hence pinning 1.21.x here
+    # rather than 1.16.3 exactly. Do not bump past 1.21 without confirming
+    # that ``subgraph_t5_encoder.cc::Validate()`` still rejects the
+    # 2-input encoder layout for the upgraded version.
+    "onnxruntime==1.21.1",
+    "teradatasql>=20.0.0",
+    "teradataml>=20.0.0.0",
+]
+# Standalone "BYOM compatibility" extra. Use this when validating a
+# converted model against the same ORT contract Teradata BYOM enforces
+# inside ``TD_MLDB.ONNXSeq2Seq``. Equivalent to the ``dev`` ORT pin; kept
+# separate so a downstream CI lane (issue #15) can install just this
+# without picking up pytest/ruff/mypy.
+byom-compat = [
+    "onnxruntime==1.21.1",
+]
+notebook = [
+    "jupyter>=1.0",
+    "ipykernel>=6.29",
+    "papermill>=2.6,<3.0",
+    "nbconvert>=7.16,<8.0",
+    "pandas>=2.0,<3.0",
+    "teradataml>=20.0.0.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/asmirnov-tba/teradata-opus-translate-ce"
+Repository = "https://github.com/asmirnov-tba/teradata-opus-translate-ce"
+Issues = "https://github.com/asmirnov-tba/teradata-opus-translate-ce/issues"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+teradata_opus_translate = ["py.typed"]
+
+# Keep the sdist tight: ship the package source, the README, the LICENSE,
+# and the build config. Exclude tests, notebooks, scripts, docs, sql, the
+# parity-report fixtures, the BYOM PDF, agent scratch, and CI metadata —
+# none of those are needed by ``pip install``.
+[tool.setuptools]
+include-package-data = false
+
+# ---------------------------------------------------------------------------
+# Ruff: linter + formatter
+# ---------------------------------------------------------------------------
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+src = ["src", "tests", "scripts"]
+extend-exclude = ["notebooks", "byom-docs.pdf"]
+
+[tool.ruff.lint]
+select = [
+    "E",   # pycodestyle errors
+    "W",   # pycodestyle warnings
+    "F",   # pyflakes
+    "I",   # isort
+    "B",   # flake8-bugbear
+    "UP",  # pyupgrade
+    "SIM", # flake8-simplify
+    "RUF", # ruff-specific
+]
+ignore = [
+    "E501",  # line length handled by formatter
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["B", "SIM"]
+# The default verification samples in api.py contain native-script text
+# from many languages (Cyrillic, Greek, Turkish dotless-i, Tongan turned
+# comma, etc.). RUF001 / RUF002 / RUF003 flag these as "ambiguous"
+# unicode -- the warnings are intentional code points, not typos, so we
+# silence them in the one file that pins these strings.
+"src/teradata_opus_translate/_converter/api.py" = ["RUF001", "RUF002", "RUF003"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+
+# ---------------------------------------------------------------------------
+# Pytest
+# ---------------------------------------------------------------------------
+[tool.pytest.ini_options]
+minversion = "8.0"
+testpaths = ["tests"]
+addopts = [
+    "-ra",
+    "--strict-markers",
+    "--strict-config",
+]
+markers = [
+    "integration: tests that require a running Teradata instance",
+    "slow: tests that take more than a few seconds",
+]
+
+# ---------------------------------------------------------------------------
+# Mypy
+# ---------------------------------------------------------------------------
+[tool.mypy]
+python_version = "3.12"
+strict = false
+warn_unused_configs = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+ignore_missing_imports = true
+files = ["src"]

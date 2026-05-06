@@ -1,0 +1,49 @@
+# Local Teradata BYOM reference doc (kept out of git per project rules)
+byom-docs.pdf
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+*.egg
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+.coverage.*
+htmlcov/
+build/
+dist/
+*.whl
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Model artifacts (large; live in GitHub Releases, not in git)
+*.onnx
+*.spm
+tokenizer.json
+
+# Editor / OS
+.vscode/
+.idea/
+.DS_Store
+*.swp
+
+# Agent-local scratch
+.claude/
+
+# Local environment overrides
+.env
+.env.local
+
+# Test-local HuggingFace cache (downloaded on first slow-lane run, reused
+# between runs; size ~50 MiB for the tiny smoke model). See
+# tests/test_tiny_model_smoke.py.
+tests/data/hf-cache/

@@ -1,0 +1,21 @@
+{
+  "model_id": "Helsinki-NLP/opus-mt-de-en",
+  "description": "Small DE->EN smoke set used by the converter tests. Mixed domains: greetings, conversational, weather, technical, business, travel, food. Reference translations are produced by Helsinki-NLP/opus-mt-de-en itself with greedy decoding -- i.e. they are 'self-consistency' references, not gold human translations. Strict parity vs transformers is judged in #6.",
+  "pairs": [
+    {"de": "Hallo Welt.", "en_keywords": ["hello", "world"]},
+    {"de": "Guten Morgen.", "en_keywords": ["good", "morning"]},
+    {"de": "Wie geht es dir heute?", "en_keywords": ["how", "you", "today"]},
+    {"de": "Vielen Dank für deine Hilfe.", "en_keywords": ["thank", "help"]},
+    {"de": "Es regnet seit gestern Abend.", "en_keywords": ["rain"]},
+    {"de": "Das Wetter ist heute sehr schön.", "en_keywords": ["weather", "nice"]},
+    {"de": "Ich möchte einen Kaffee bestellen.", "en_keywords": ["want", "coffee"]},
+    {"de": "Wo ist der nächste Bahnhof?", "en_keywords": ["where", "station"]},
+    {"de": "Die Konferenz beginnt morgen um neun Uhr.", "en_keywords": ["conference", "tomorrow", "nine"]},
+    {"de": "Bitte schicken Sie mir den Bericht per E-Mail.", "en_keywords": ["report", "email", "send"]},
+    {"de": "Maschinelles Lernen ist ein wichtiges Forschungsgebiet.", "en_keywords": ["machine", "learning", "research"]},
+    {"de": "Der Algorithmus berechnet das Ergebnis in linearer Zeit.", "en_keywords": ["algorithm", "result"]},
+    {"de": "Die Datenbank speichert Millionen von Einträgen.", "en_keywords": ["database", "stores"]},
+    {"de": "Berlin ist die Hauptstadt von Deutschland.", "en_keywords": ["berlin", "capital", "germany"]},
+    {"de": "Mein Lieblingsessen ist Spaghetti mit Tomatensauce.", "en_keywords": ["favourite", "spaghetti"]}
+  ]
+}
