@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "teradata-opus-translate"
-version = "1.0.3"
+version = "1.0.4"
 description = "Convert Helsinki-NLP OPUS / Marian translation models into self-contained ONNX files for deployment to Teradata Vantage via Bring Your Own Model (BYOM)."
 readme = { file = "README.md", content-type = "text/markdown" }
 requires-python = ">=3.12"
@@ -48,7 +48,7 @@ dependencies = [
     "transformers>=4.40,<5.0",
     "torch>=2.2,<3.0",
     "onnx>=1.16,<2.0",
-    "onnxruntime>=1.17,<1.22",
+    "onnxruntime>=1.17,<2.0",
     "sentencepiece>=0.2.0,<0.3",
     "tokenizers>=0.19,<1.0",
     # Required by ``transformers.MarianTokenizer`` to suppress its

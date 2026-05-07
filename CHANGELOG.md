@@ -4,6 +4,12 @@ All notable changes to `teradata-opus-translate` are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.4] — 2026-05-07
+
+### Fixed
+
+- **Relax `onnxruntime` runtime pin from `<1.22` to `<2.0`**. ORT 1.17–1.21 wheels are no longer on PyPI for current Python versions, making v1.0.3 uninstallable on Python 3.12+. The original pin protected against a theoretical converter regression to a 2-input encoder pattern that ORT 1.22+ accepts but BYOM 1.16.3 rejects; that protection is no longer load-bearing since the converter's wiring (in `_converter/assemble.py`) produces the 3-input encoder regardless of which ORT version validates it locally.
+
 ## [1.0.3] — 2026-05-07
 
 ### Added
