@@ -1,13 +1,26 @@
 # Notebooks
 
-This directory holds the customer-facing demo notebook for the
+This directory holds the customer-facing demo notebooks for the
 Teradata BYOM translation pipeline.
 
 - [`opus_de_en_demo.ipynb`](opus_de_en_demo.ipynb) — end-to-end
   demonstration of running `Helsinki-NLP/opus-mt-de-en` inside
-  Teradata via `TD_MLDB.ONNXSeq2Seq`. The notebook is committed
-  with all output cells populated so it can be read top-to-bottom
-  without a database connection.
+  Teradata via `TD_MLDB.ONNXSeq2Seq`. Walks through the **full**
+  pipeline: HuggingFace download, ONNX export, BYOM deploy, SQL
+  translation, parity check against `transformers`. Use this when
+  you want to see how a model gets converted, or when no pre-built
+  ONNX is available for the checkpoint you need.
+- [`opus_de_en_s3_demo.ipynb`](opus_de_en_s3_demo.ipynb) — same
+  destination, shorter route. Downloads a pre-built ONNX and
+  tokenizer for `Helsinki-NLP/opus-mt_tiny_deu-eng` from the
+  public `teradata-opus-translate-ce` S3 bucket, deploys via
+  `teradataml.save_byom`, and translates a set of German
+  sentences. Skips the `torch.onnx.export` step entirely. Use
+  this when a pre-built artifact exists for the model you want
+  (see [`data/s3_manifest.json`](../data/s3_manifest.json)).
+
+Both notebooks are committed with output cells populated so they
+can be read top-to-bottom without a database connection.
 
 ## Running it against your own Teradata instance
 
@@ -60,10 +73,14 @@ TD_BYOM_DATABASE=OPUS_BYOM \
         notebooks/opus_de_en_demo.ipynb
 ```
 
-The first execution is the slow one — exporting the model to ONNX
-runs once and caches a 743 MB file under
-`~/.cache/teradata-opus-translate/`. Re-runs reuse the cached
-artifact instead of re-exporting.
+The first execution of `opus_de_en_demo.ipynb` is the slow one —
+exporting the model to ONNX runs once and caches a 743 MB file
+under `~/.cache/teradata-opus-translate/`. Re-runs reuse the
+cached artifact instead of re-exporting.
+
+`opus_de_en_s3_demo.ipynb` skips the export step entirely; first
+execution downloads ~177 MiB from S3 once into
+`~/.cache/teradata-opus-translate/s3/` and reuses it on re-runs.
 
 ### Interactive use
 

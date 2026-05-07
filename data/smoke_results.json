@@ -1,0 +1,541 @@
+{
+  "schema_version": "1.0",
+  "generated_at": "2026-05-07T02:12:16+00:00",
+  "td_instance": "192.168.178.40 (prod, one-shot per-task auth)",
+  "package_version": "1.0.2",
+  "opset": 14,
+  "models": [
+    {
+      "model_id": "Helsinki-NLP/opus-mt_tiny_ara-eng",
+      "short_id": "opus-mt_tiny_ara-eng",
+      "source_lang": "ara",
+      "target_lang": "eng",
+      "status": "success",
+      "samples": [
+        {
+          "input": "مرحبا بالعالم.",
+          "output": "Hello in the world."
+        },
+        {
+          "input": "الطقس جميل اليوم.",
+          "output": "The weather is beautiful today."
+        }
+      ],
+      "query_duration_ms": 1001,
+      "error": null,
+      "model_blob_bytes": 177301730,
+      "tokenizer_blob_bytes": 2163889
+    },
+    {
+      "model_id": "Helsinki-NLP/opus-mt_tiny_cat-eng",
+      "short_id": "opus-mt_tiny_cat-eng",
+      "source_lang": "cat",
+      "target_lang": "eng",
+      "status": "success",
+      "samples": [
+        {
+          "input": "Hola món.",
+          "output": "Hello world."
+        },
+        {
+          "input": "Avui fa bon temps.",
+          "output": "Today is a good time."
+        }
+      ],
+      "query_duration_ms": 991,
+      "error": null,
+      "model_blob_bytes": 177301730,
+      "tokenizer_blob_bytes": 2107844
+    },
+    {
+      "model_id": "Helsinki-NLP/opus-mt_tiny_cat-spa",
+      "short_id": "opus-mt_tiny_cat-spa",
+      "source_lang": "cat",
+      "target_lang": "spa",
+      "status": "success",
+      "samples": [
+        {
+          "input": "Hola món.",
+          "output": "Hola el mundo."
+        },
+        {
+          "input": "Avui fa bon temps.",
+          "output": "Hoy hace buen tiempo."
+        }
+      ],
+      "query_duration_ms": 1031,
+      "error": null,
+      "model_blob_bytes": 177301730,
+      "tokenizer_blob_bytes": 2122888
+    },
+    {
+      "model_id": "Helsinki-NLP/opus-mt_tiny_deu-eng",
+      "short_id": "opus-mt_tiny_deu-eng",
+      "source_lang": "deu",
+      "target_lang": "eng",
+      "status": "success",
+      "samples": [
+        {
+          "input": "Hallo Welt.",
+          "output": "Hello world."
+        },
+        {
+          "input": "Das Wetter ist heute schön.",
+          "output": "The weather is beautiful today."
+        }
+      ],
+      "query_duration_ms": 1032,
+      "error": null,
+      "model_blob_bytes": 177301730,
+      "tokenizer_blob_bytes": 2104618
+    },
+    {
+      "model_id": "Helsinki-NLP/opus-mt_tiny_ell-eng",
+      "short_id": "opus-mt_tiny_ell-eng",
+      "source_lang": "ell",
+      "target_lang": "eng",
+      "status": "success",
+      "samples": [
+        {
+          "input": "Γεια σου κόσμε.",
+          "output": "Hello, people."
+        },
+        {
+          "input": "Ο καιρός είναι ωραίος σήμερα.",
+          "output": "The weather is nice today."
+        }
+      ],
+      "query_duration_ms": 1073,
+      "error": null,
+      "model_blob_bytes": 177301730,
+      "tokenizer_blob_bytes": 2221485
+    },
+    {
+      "model_id": "Helsinki-NLP/opus-mt_tiny_eng-cat",
+      "short_id": "opus-mt_tiny_eng-cat",
+      "source_lang": "eng",
+      "target_lang": "cat",
+      "status": "success",
+      "samples": [
+        {
+          "input": "Hello, world.",
+          "output": "Hola, el món."
+        },
+        {
+          "input": "The weather is nice today.",
+          "output": "Avui el temps és bo."
+        }
+      ],
+      "query_duration_ms": 1028,
+      "error": null,
+      "model_blob_bytes": 177301730,
+      "tokenizer_blob_bytes": 2108021
+    },
+    {
+      "model_id": "Helsinki-NLP/opus-mt_tiny_eng-deu",
+      "short_id": "opus-mt_tiny_eng-deu",
+      "source_lang": "eng",
+      "target_lang": "deu",
+      "status": "success",
+      "samples": [
+        {
+          "input": "Hello, world.",
+          "output": "Hallo, die Welt."
+        },
+        {
+          "input": "The weather is nice today.",
+          "output": "Das Wetter ist heute schön."
+        }
+      ],
+      "query_duration_ms": 1026,
+      "error": null,
+      "model_blob_bytes": 177301730,
+      "tokenizer_blob_bytes": 2104357
+    },
+    {
+      "model_id": "Helsinki-NLP/opus-mt_tiny_eng-ell",
+      "short_id": "opus-mt_tiny_eng-ell",
+      "source_lang": "eng",
+      "target_lang": "ell",
+      "status": "success",
+      "samples": [
+        {
+          "input": "Hello, world.",
+          "output": "Γεια σου, κόσμος."
+        },
+        {
+          "input": "The weather is nice today.",
+          "output": "Ο καιρός είναι καλός σήμερα."
+        }
+      ],
+      "query_duration_ms": 1066,
+      "error": null,
+      "model_blob_bytes": 177301730,
+      "tokenizer_blob_bytes": 2222026
+    },
+    {
+      "model_id": "Helsinki-NLP/opus-mt_tiny_eng-fra",
+      "short_id": "opus-mt_tiny_eng-fra",
+      "source_lang": "eng",
+      "target_lang": "fra",
+      "status": "success",
+      "samples": [
+        {
+          "input": "Hello, world.",
+          "output": "Bonjour, le monde."
+        },
+        {
+          "input": "The weather is nice today.",
+          "output": "Le temps est beau aujourd'hui."
+        }
+      ],
+      "query_duration_ms": 964,
+      "error": null,
+      "model_blob_bytes": 177301730,
+      "tokenizer_blob_bytes": 2108717
+    },
+    {
+      "model_id": "Helsinki-NLP/opus-mt_tiny_eng-ita",
+      "short_id": "opus-mt_tiny_eng-ita",
+      "source_lang": "eng",
+      "target_lang": "ita",
+      "status": "success",
+      "samples": [
+        {
+          "input": "Hello, world.",
+          "output": "- Ciao, il mondo."
+        },
+        {
+          "input": "The weather is nice today.",
+          "output": "Il tempo è bello oggi."
+        }
+      ],
+      "query_duration_ms": 1110,
+      "error": null,
+      "model_blob_bytes": 177301730,
+      "tokenizer_blob_bytes": 2107870
+    },
+    {
+      "model_id": "Helsinki-NLP/opus-mt_tiny_eng-nld",
+      "short_id": "opus-mt_tiny_eng-nld",
+      "source_lang": "eng",
+      "target_lang": "nld",
+      "status": "success",
+      "samples": [
+        {
+          "input": "Hello, world.",
+          "output": "Hallo, de wereld."
+        },
+        {
+          "input": "The weather is nice today.",
+          "output": "Het weer is vandaag mooi."
+        }
+      ],
+      "query_duration_ms": 1031,
+      "error": null,
+      "model_blob_bytes": 177301730,
+      "tokenizer_blob_bytes": 2101632
+    },
+    {
+      "model_id": "Helsinki-NLP/opus-mt_tiny_eng-rus",
+      "short_id": "opus-mt_tiny_eng-rus",
+      "source_lang": "eng",
+      "target_lang": "rus",
+      "status": "success",
+      "samples": [
+        {
+          "input": "Hello, world.",
+          "output": "Привет, мир."
+        },
+        {
+          "input": "The weather is nice today.",
+          "output": "Погода сегодня хорошая."
+        }
+      ],
+      "query_duration_ms": 1072,
+      "error": null,
+      "model_blob_bytes": 177301730,
+      "tokenizer_blob_bytes": 2247063
+    },
+    {
+      "model_id": "Helsinki-NLP/opus-mt_tiny_eng-spa",
+      "short_id": "opus-mt_tiny_eng-spa",
+      "source_lang": "eng",
+      "target_lang": "spa",
+      "status": "success",
+      "samples": [
+        {
+          "input": "Hello, world.",
+          "output": "Hola, mundo."
+        },
+        {
+          "input": "The weather is nice today.",
+          "output": "El clima es agradable hoy."
+        }
+      ],
+      "query_duration_ms": 1065,
+      "error": null,
+      "model_blob_bytes": 177301730,
+      "tokenizer_blob_bytes": 2110524
+    },
+    {
+      "model_id": "Helsinki-NLP/opus-mt_tiny_eng-tur",
+      "short_id": "opus-mt_tiny_eng-tur",
+      "source_lang": "eng",
+      "target_lang": "tur",
+      "status": "success",
+      "samples": [
+        {
+          "input": "Hello, world.",
+          "output": "Merhaba, dünya."
+        },
+        {
+          "input": "The weather is nice today.",
+          "output": "Bugün hava çok güzel."
+        }
+      ],
+      "query_duration_ms": 1047,
+      "error": null,
+      "model_blob_bytes": 177301730,
+      "tokenizer_blob_bytes": 2118825
+    },
+    {
+      "model_id": "Helsinki-NLP/opus-mt_tiny_fra-eng",
+      "short_id": "opus-mt_tiny_fra-eng",
+      "source_lang": "fra",
+      "target_lang": "eng",
+      "status": "success",
+      "samples": [
+        {
+          "input": "Bonjour le monde.",
+          "output": "Good morning, the world."
+        },
+        {
+          "input": "Il fait beau aujourd'hui.",
+          "output": "It's beautiful today."
+        }
+      ],
+      "query_duration_ms": 1048,
+      "error": null,
+      "model_blob_bytes": 177301730,
+      "tokenizer_blob_bytes": 2108824
+    },
+    {
+      "model_id": "Helsinki-NLP/opus-mt_tiny_ita-eng",
+      "short_id": "opus-mt_tiny_ita-eng",
+      "source_lang": "ita",
+      "target_lang": "eng",
+      "status": "success",
+      "samples": [
+        {
+          "input": "Ciao mondo.",
+          "output": "Hi, the world."
+        },
+        {
+          "input": "Oggi il tempo è bello.",
+          "output": "Today the weather is beautiful."
+        }
+      ],
+      "query_duration_ms": 1028,
+      "error": null,
+      "model_blob_bytes": 177301730,
+      "tokenizer_blob_bytes": 2108148
+    },
+    {
+      "model_id": "Helsinki-NLP/opus-mt_tiny_kor-eng",
+      "short_id": "opus-mt_tiny_kor-eng",
+      "source_lang": "kor",
+      "target_lang": "eng",
+      "status": "success",
+      "samples": [
+        {
+          "input": "안녕하세요, 세계.",
+          "output": "Hello, the world."
+        },
+        {
+          "input": "오늘 날씨가 좋습니다.",
+          "output": "The weather is good today."
+        }
+      ],
+      "query_duration_ms": 1093,
+      "error": null,
+      "model_blob_bytes": 177301730,
+      "tokenizer_blob_bytes": 2110053
+    },
+    {
+      "model_id": "Helsinki-NLP/opus-mt_tiny_nld-eng",
+      "short_id": "opus-mt_tiny_nld-eng",
+      "source_lang": "nld",
+      "target_lang": "eng",
+      "status": "success",
+      "samples": [
+        {
+          "input": "Hallo wereld.",
+          "output": "- Hello, world."
+        },
+        {
+          "input": "Het weer is vandaag mooi.",
+          "output": "The weather is beautiful today."
+        }
+      ],
+      "query_duration_ms": 1029,
+      "error": null,
+      "model_blob_bytes": 177301730,
+      "tokenizer_blob_bytes": 2101781
+    },
+    {
+      "model_id": "Helsinki-NLP/opus-mt_tiny_rus-eng",
+      "short_id": "opus-mt_tiny_rus-eng",
+      "source_lang": "rus",
+      "target_lang": "eng",
+      "status": "success",
+      "samples": [
+        {
+          "input": "Привет, мир.",
+          "output": "Hey, peace."
+        },
+        {
+          "input": "Сегодня хорошая погода.",
+          "output": "It's good weather today."
+        }
+      ],
+      "query_duration_ms": 1004,
+      "error": null,
+      "model_blob_bytes": 177301730,
+      "tokenizer_blob_bytes": 2246756
+    },
+    {
+      "model_id": "Helsinki-NLP/opus-mt_tiny_spa-cat",
+      "short_id": "opus-mt_tiny_spa-cat",
+      "source_lang": "spa",
+      "target_lang": "cat",
+      "status": "success",
+      "samples": [
+        {
+          "input": "Hola mundo.",
+          "output": "Hola món."
+        },
+        {
+          "input": "Hoy hace buen tiempo.",
+          "output": "Avui fa bon temps."
+        }
+      ],
+      "query_duration_ms": 1057,
+      "error": null,
+      "model_blob_bytes": 177301730,
+      "tokenizer_blob_bytes": 2122466
+    },
+    {
+      "model_id": "Helsinki-NLP/opus-mt_tiny_spa-eng",
+      "short_id": "opus-mt_tiny_spa-eng",
+      "source_lang": "spa",
+      "target_lang": "eng",
+      "status": "success",
+      "samples": [
+        {
+          "input": "Hola mundo.",
+          "output": "Hello world."
+        },
+        {
+          "input": "Hoy hace buen tiempo.",
+          "output": "Today's good weather."
+        }
+      ],
+      "query_duration_ms": 1092,
+      "error": null,
+      "model_blob_bytes": 177301730,
+      "tokenizer_blob_bytes": 2110235
+    },
+    {
+      "model_id": "Helsinki-NLP/opus-mt_tiny_spa-eus",
+      "short_id": "opus-mt_tiny_spa-eus",
+      "source_lang": "spa",
+      "target_lang": "eus",
+      "status": "success",
+      "samples": [
+        {
+          "input": "Hola mundo.",
+          "output": "Kaixo mundua."
+        },
+        {
+          "input": "Hoy hace buen tiempo.",
+          "output": "Gaur eguraldi ona egiten du."
+        }
+      ],
+      "query_duration_ms": 1045,
+      "error": null,
+      "model_blob_bytes": 177301730,
+      "tokenizer_blob_bytes": 2120194
+    },
+    {
+      "model_id": "Helsinki-NLP/opus-mt_tiny_spa-glg",
+      "short_id": "opus-mt_tiny_spa-glg",
+      "source_lang": "spa",
+      "target_lang": "glg",
+      "status": "success",
+      "samples": [
+        {
+          "input": "Hola mundo.",
+          "output": "Ola, o mundo."
+        },
+        {
+          "input": "Hoy hace buen tiempo.",
+          "output": "Hoxe hai un bo tempo."
+        }
+      ],
+      "query_duration_ms": 989,
+      "error": null,
+      "model_blob_bytes": 177301730,
+      "tokenizer_blob_bytes": 2126895
+    },
+    {
+      "model_id": "Helsinki-NLP/opus-mt_tiny_tur-eng",
+      "short_id": "opus-mt_tiny_tur-eng",
+      "source_lang": "tur",
+      "target_lang": "eng",
+      "status": "success",
+      "samples": [
+        {
+          "input": "Merhaba dünya.",
+          "output": "Hello world."
+        },
+        {
+          "input": "Bugün hava güzel.",
+          "output": "Today the weather is nice."
+        }
+      ],
+      "query_duration_ms": 1025,
+      "error": null,
+      "model_blob_bytes": 177301730,
+      "tokenizer_blob_bytes": 2119128
+    },
+    {
+      "model_id": "Helsinki-NLP/opus-mt_tiny_zho-eng",
+      "short_id": "opus-mt_tiny_zho-eng",
+      "source_lang": "zho",
+      "target_lang": "eng",
+      "status": "success",
+      "samples": [
+        {
+          "input": "你好,世界。",
+          "output": "Hello, the world."
+        },
+        {
+          "input": "今天天气很好。",
+          "output": "The weather is good today."
+        }
+      ],
+      "query_duration_ms": 989,
+      "error": null,
+      "model_blob_bytes": 177301730,
+      "tokenizer_blob_bytes": 2045516
+    }
+  ],
+  "summary": {
+    "total_models": 25,
+    "success": 25,
+    "failed": 0,
+    "errored": 0,
+    "total_duration_seconds": 284
+  }
+}

@@ -4,6 +4,27 @@ All notable changes to `teradata-opus-translate` are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.3] — 2026-05-07
+
+### Added
+
+- **Phase 3 publication**: 25 MarianMT tiny-variant models from the
+  [`Helsinki-NLP/opustranslate`](https://huggingface.co/collections/Helsinki-NLP/opustranslate)
+  collection are now published as ready-to-deploy ONNX artifacts on S3 at
+  `s3://teradata-opus-translate-ce/opus-translate/14/Helsinki-NLP/<model-id>/`.
+  Each model ships fp32 + (when quantization holds) int8 + tokenizer.json,
+  verified end-to-end via per-model BYOM smoke tests.
+- **Published catalog**: `docs/published-models.md` lists every available
+  model with language pair, parameter count, context size, output cap,
+  fp32/int8 sizes, S3 URLs, and smoke status.
+- **Customer notebook B**: `notebooks/opus_de_en_s3_demo.ipynb` shows the
+  download-from-S3 path — pull a pre-built ONNX directly into Teradata
+  BYOM without re-converting from HuggingFace.
+- **Manifest files**: `data/catalog.json` (collection metadata),
+  `data/s3_manifest.json` (per-model S3 URLs), and
+  `data/smoke_results.json` (BYOM scoring results) provide a programmatic
+  index of what's available.
+
 ## [1.0.2] — 2026-05-07
 
 ### Changed

@@ -1,0 +1,705 @@
+{
+  "schema_version": "1.0",
+  "generated_at": "2026-05-07T00:55:49+00:00",
+  "collection": "Helsinki-NLP/opustranslate",
+  "notes": {
+    "max_output_size": "BeamSearch graph default (max_length=256) baked in by teradata_opus_translate at export time. Overridable at SQL time via Const_max_length(N), bounded by the model's training-time output limit.",
+    "context_size": "Model max_position_embeddings -- input token cap enforced by the encoder.",
+    "params": "Total parameter count from the safetensors metadata (HfApi.model_info(...).safetensors.total).",
+    "safetensors_size_bytes": "Sum of *.safetensors sibling sizes in the HF repo. Falls back to pytorch_model*.bin / model*.bin when no safetensors are present."
+  },
+  "models": [
+    {
+      "model_id": "Helsinki-NLP/opus-mt_tiny_ara-eng",
+      "short_id": "opus-mt_tiny_ara-eng",
+      "language_pair": {
+        "src": "ara",
+        "tgt": "eng"
+      },
+      "params": 25363201,
+      "safetensors_size_bytes": 50743442,
+      "context_size": 256,
+      "max_output_size": 256,
+      "architecture": "MarianMTModel",
+      "last_modified": "2026-05-06T07:16:32+00:00",
+      "downloads": 173,
+      "tags": [
+        "tflite",
+        "safetensors",
+        "marian",
+        "translation",
+        "en",
+        "ar",
+        "dataset:Helsinki-NLP/tatoeba",
+        "dataset:openlanguagedata/flores_plus",
+        "license:apache-2.0",
+        "region:us"
+      ]
+    },
+    {
+      "model_id": "Helsinki-NLP/opus-mt_tiny_cat-eng",
+      "short_id": "opus-mt_tiny_cat-eng",
+      "language_pair": {
+        "src": "cat",
+        "tgt": "eng"
+      },
+      "params": 25363201,
+      "safetensors_size_bytes": 50743442,
+      "context_size": 256,
+      "max_output_size": 256,
+      "architecture": "MarianMTModel",
+      "last_modified": "2026-05-06T07:18:20+00:00",
+      "downloads": 76,
+      "tags": [
+        "tflite",
+        "safetensors",
+        "marian",
+        "translation",
+        "ca",
+        "en",
+        "dataset:Helsinki-NLP/tatoeba",
+        "dataset:openlanguagedata/flores_plus",
+        "license:apache-2.0",
+        "region:us"
+      ]
+    },
+    {
+      "model_id": "Helsinki-NLP/opus-mt_tiny_cat-spa",
+      "short_id": "opus-mt_tiny_cat-spa",
+      "language_pair": {
+        "src": "cat",
+        "tgt": "spa"
+      },
+      "params": 25363201,
+      "safetensors_size_bytes": 50743442,
+      "context_size": 256,
+      "max_output_size": 256,
+      "architecture": "MarianMTModel",
+      "last_modified": "2026-05-06T07:17:44+00:00",
+      "downloads": 110,
+      "tags": [
+        "tflite",
+        "safetensors",
+        "marian",
+        "translation",
+        "es",
+        "ca",
+        "dataset:Helsinki-NLP/tatoeba",
+        "dataset:openlanguagedata/flores_plus",
+        "license:apache-2.0",
+        "region:us"
+      ]
+    },
+    {
+      "model_id": "Helsinki-NLP/opus-mt_tiny_deu-eng",
+      "short_id": "opus-mt_tiny_deu-eng",
+      "language_pair": {
+        "src": "deu",
+        "tgt": "eng"
+      },
+      "params": 25363201,
+      "safetensors_size_bytes": 50743442,
+      "context_size": 256,
+      "max_output_size": 256,
+      "architecture": "MarianMTModel",
+      "last_modified": "2026-05-06T07:12:28+00:00",
+      "downloads": 169,
+      "tags": [
+        "tflite",
+        "safetensors",
+        "marian",
+        "translation",
+        "en",
+        "de",
+        "dataset:Helsinki-NLP/tatoeba",
+        "dataset:openlanguagedata/flores_plus",
+        "dataset:facebook/bouquet",
+        "license:apache-2.0",
+        "region:us"
+      ]
+    },
+    {
+      "model_id": "Helsinki-NLP/opus-mt_tiny_ell-eng",
+      "short_id": "opus-mt_tiny_ell-eng",
+      "language_pair": {
+        "src": "ell",
+        "tgt": "eng"
+      },
+      "params": 25363201,
+      "safetensors_size_bytes": 50743442,
+      "context_size": 256,
+      "max_output_size": 256,
+      "architecture": "MarianMTModel",
+      "last_modified": "2026-05-06T07:19:56+00:00",
+      "downloads": 115,
+      "tags": [
+        "tflite",
+        "safetensors",
+        "marian",
+        "translation",
+        "en",
+        "el",
+        "dataset:Helsinki-NLP/tatoeba",
+        "dataset:openlanguagedata/flores_plus",
+        "dataset:facebook/bouquet",
+        "license:apache-2.0",
+        "region:us"
+      ]
+    },
+    {
+      "model_id": "Helsinki-NLP/opus-mt_tiny_eng-cat",
+      "short_id": "opus-mt_tiny_eng-cat",
+      "language_pair": {
+        "src": "eng",
+        "tgt": "cat"
+      },
+      "params": 25363201,
+      "safetensors_size_bytes": 50743442,
+      "context_size": 256,
+      "max_output_size": 256,
+      "architecture": "MarianMTModel",
+      "last_modified": "2026-05-06T07:23:28+00:00",
+      "downloads": 104,
+      "tags": [
+        "tflite",
+        "safetensors",
+        "marian",
+        "translation",
+        "ca",
+        "en",
+        "dataset:Helsinki-NLP/tatoeba",
+        "dataset:openlanguagedata/flores_plus",
+        "license:apache-2.0",
+        "region:us"
+      ]
+    },
+    {
+      "model_id": "Helsinki-NLP/opus-mt_tiny_eng-deu",
+      "short_id": "opus-mt_tiny_eng-deu",
+      "language_pair": {
+        "src": "eng",
+        "tgt": "deu"
+      },
+      "params": 25363201,
+      "safetensors_size_bytes": 50743442,
+      "context_size": 256,
+      "max_output_size": 256,
+      "architecture": "MarianMTModel",
+      "last_modified": "2026-05-06T07:13:44+00:00",
+      "downloads": 174,
+      "tags": [
+        "tflite",
+        "safetensors",
+        "marian",
+        "translation",
+        "en",
+        "de",
+        "dataset:Helsinki-NLP/tatoeba",
+        "dataset:openlanguagedata/flores_plus",
+        "dataset:facebook/bouquet",
+        "license:apache-2.0",
+        "region:us"
+      ]
+    },
+    {
+      "model_id": "Helsinki-NLP/opus-mt_tiny_eng-ell",
+      "short_id": "opus-mt_tiny_eng-ell",
+      "language_pair": {
+        "src": "eng",
+        "tgt": "ell"
+      },
+      "params": 25363201,
+      "safetensors_size_bytes": 50743442,
+      "context_size": 256,
+      "max_output_size": 256,
+      "architecture": "MarianMTModel",
+      "last_modified": "2026-05-06T07:25:14+00:00",
+      "downloads": 89,
+      "tags": [
+        "tflite",
+        "safetensors",
+        "marian",
+        "translation",
+        "en",
+        "el",
+        "dataset:Helsinki-NLP/tatoeba",
+        "dataset:openlanguagedata/flores_plus",
+        "dataset:facebook/bouquet",
+        "license:apache-2.0",
+        "region:us"
+      ]
+    },
+    {
+      "model_id": "Helsinki-NLP/opus-mt_tiny_eng-fra",
+      "short_id": "opus-mt_tiny_eng-fra",
+      "language_pair": {
+        "src": "eng",
+        "tgt": "fra"
+      },
+      "params": 25363201,
+      "safetensors_size_bytes": 50743442,
+      "context_size": 256,
+      "max_output_size": 256,
+      "architecture": "MarianMTModel",
+      "last_modified": "2026-05-06T07:11:55+00:00",
+      "downloads": 218,
+      "tags": [
+        "tflite",
+        "safetensors",
+        "marian",
+        "translation",
+        "en",
+        "fr",
+        "dataset:Helsinki-NLP/tatoeba",
+        "dataset:openlanguagedata/flores_plus",
+        "dataset:facebook/bouquet",
+        "license:apache-2.0",
+        "region:us"
+      ]
+    },
+    {
+      "model_id": "Helsinki-NLP/opus-mt_tiny_eng-ita",
+      "short_id": "opus-mt_tiny_eng-ita",
+      "language_pair": {
+        "src": "eng",
+        "tgt": "ita"
+      },
+      "params": 25363201,
+      "safetensors_size_bytes": 50743442,
+      "context_size": 256,
+      "max_output_size": 256,
+      "architecture": "MarianMTModel",
+      "last_modified": "2026-05-06T07:24:38+00:00",
+      "downloads": 94,
+      "tags": [
+        "tflite",
+        "safetensors",
+        "marian",
+        "translation",
+        "en",
+        "it",
+        "dataset:Helsinki-NLP/tatoeba",
+        "dataset:openlanguagedata/flores_plus",
+        "dataset:facebook/bouquet",
+        "license:apache-2.0",
+        "region:us"
+      ]
+    },
+    {
+      "model_id": "Helsinki-NLP/opus-mt_tiny_eng-nld",
+      "short_id": "opus-mt_tiny_eng-nld",
+      "language_pair": {
+        "src": "eng",
+        "tgt": "nld"
+      },
+      "params": 25363201,
+      "safetensors_size_bytes": 50743442,
+      "context_size": 256,
+      "max_output_size": 256,
+      "architecture": "MarianMTModel",
+      "last_modified": "2026-05-06T07:24:06+00:00",
+      "downloads": 94,
+      "tags": [
+        "tflite",
+        "safetensors",
+        "marian",
+        "translation",
+        "en",
+        "nl",
+        "dataset:Helsinki-NLP/tatoeba",
+        "dataset:openlanguagedata/flores_plus",
+        "dataset:facebook/bouquet",
+        "license:apache-2.0",
+        "region:us"
+      ]
+    },
+    {
+      "model_id": "Helsinki-NLP/opus-mt_tiny_eng-rus",
+      "short_id": "opus-mt_tiny_eng-rus",
+      "language_pair": {
+        "src": "eng",
+        "tgt": "rus"
+      },
+      "params": 25363201,
+      "safetensors_size_bytes": 50743442,
+      "context_size": 256,
+      "max_output_size": 256,
+      "architecture": "MarianMTModel",
+      "last_modified": "2026-05-06T07:11:19+00:00",
+      "downloads": 202,
+      "tags": [
+        "tflite",
+        "safetensors",
+        "marian",
+        "translation",
+        "en",
+        "ru",
+        "dataset:Helsinki-NLP/tatoeba",
+        "dataset:openlanguagedata/flores_plus",
+        "dataset:facebook/bouquet",
+        "license:apache-2.0",
+        "region:us"
+      ]
+    },
+    {
+      "model_id": "Helsinki-NLP/opus-mt_tiny_eng-spa",
+      "short_id": "opus-mt_tiny_eng-spa",
+      "language_pair": {
+        "src": "eng",
+        "tgt": "spa"
+      },
+      "params": 25363201,
+      "safetensors_size_bytes": 50743442,
+      "context_size": 256,
+      "max_output_size": 256,
+      "architecture": "MarianMTModel",
+      "last_modified": "2026-05-06T07:22:11+00:00",
+      "downloads": 121,
+      "tags": [
+        "tflite",
+        "safetensors",
+        "marian",
+        "translation",
+        "en",
+        "es",
+        "dataset:Helsinki-NLP/tatoeba",
+        "dataset:openlanguagedata/flores_plus",
+        "dataset:facebook/bouquet",
+        "license:apache-2.0",
+        "region:us"
+      ]
+    },
+    {
+      "model_id": "Helsinki-NLP/opus-mt_tiny_eng-tur",
+      "short_id": "opus-mt_tiny_eng-tur",
+      "language_pair": {
+        "src": "eng",
+        "tgt": "tur"
+      },
+      "params": 25363201,
+      "safetensors_size_bytes": 50743442,
+      "context_size": 256,
+      "max_output_size": 256,
+      "architecture": "MarianMTModel",
+      "last_modified": "2026-05-06T07:20:29+00:00",
+      "downloads": 135,
+      "tags": [
+        "tflite",
+        "safetensors",
+        "marian",
+        "translation",
+        "en",
+        "tr",
+        "dataset:Helsinki-NLP/tatoeba",
+        "dataset:openlanguagedata/flores_plus",
+        "dataset:facebook/bouquet",
+        "license:apache-2.0",
+        "region:us"
+      ]
+    },
+    {
+      "model_id": "Helsinki-NLP/opus-mt_tiny_fra-eng",
+      "short_id": "opus-mt_tiny_fra-eng",
+      "language_pair": {
+        "src": "fra",
+        "tgt": "eng"
+      },
+      "params": 25363201,
+      "safetensors_size_bytes": 50743442,
+      "context_size": 256,
+      "max_output_size": 256,
+      "architecture": "MarianMTModel",
+      "last_modified": "2026-05-06T07:09:15+00:00",
+      "downloads": 219,
+      "tags": [
+        "tflite",
+        "safetensors",
+        "marian",
+        "translation",
+        "en",
+        "fr",
+        "dataset:Helsinki-NLP/tatoeba",
+        "dataset:openlanguagedata/flores_plus",
+        "dataset:facebook/bouquet",
+        "license:apache-2.0",
+        "region:us"
+      ]
+    },
+    {
+      "model_id": "Helsinki-NLP/opus-mt_tiny_ita-eng",
+      "short_id": "opus-mt_tiny_ita-eng",
+      "language_pair": {
+        "src": "ita",
+        "tgt": "eng"
+      },
+      "params": 25363201,
+      "safetensors_size_bytes": 50743442,
+      "context_size": 256,
+      "max_output_size": 256,
+      "architecture": "MarianMTModel",
+      "last_modified": "2026-05-06T07:12:56+00:00",
+      "downloads": 129,
+      "tags": [
+        "tflite",
+        "safetensors",
+        "marian",
+        "translation",
+        "en",
+        "it",
+        "dataset:Helsinki-NLP/tatoeba",
+        "dataset:openlanguagedata/flores_plus",
+        "dataset:facebook/bouquet",
+        "license:apache-2.0",
+        "region:us"
+      ]
+    },
+    {
+      "model_id": "Helsinki-NLP/opus-mt_tiny_kor-eng",
+      "short_id": "opus-mt_tiny_kor-eng",
+      "language_pair": {
+        "src": "kor",
+        "tgt": "eng"
+      },
+      "params": 25363201,
+      "safetensors_size_bytes": 50743442,
+      "context_size": 256,
+      "max_output_size": 256,
+      "architecture": "MarianMTModel",
+      "last_modified": "2026-05-06T07:10:21+00:00",
+      "downloads": 171,
+      "tags": [
+        "transformers",
+        "tflite",
+        "safetensors",
+        "marian",
+        "text2text-generation",
+        "translation",
+        "ko",
+        "en",
+        "dataset:Helsinki-NLP/tatoeba",
+        "endpoints_compatible",
+        "region:us"
+      ]
+    },
+    {
+      "model_id": "Helsinki-NLP/opus-mt_tiny_nld-eng",
+      "short_id": "opus-mt_tiny_nld-eng",
+      "language_pair": {
+        "src": "nld",
+        "tgt": "eng"
+      },
+      "params": 25363201,
+      "safetensors_size_bytes": 50743442,
+      "context_size": 256,
+      "max_output_size": 256,
+      "architecture": "MarianMTModel",
+      "last_modified": "2026-05-06T07:14:20+00:00",
+      "downloads": 125,
+      "tags": [
+        "tflite",
+        "safetensors",
+        "marian",
+        "translation",
+        "en",
+        "nl",
+        "dataset:Helsinki-NLP/tatoeba",
+        "dataset:openlanguagedata/flores_plus",
+        "dataset:facebook/bouquet",
+        "license:apache-2.0",
+        "region:us"
+      ]
+    },
+    {
+      "model_id": "Helsinki-NLP/opus-mt_tiny_rus-eng",
+      "short_id": "opus-mt_tiny_rus-eng",
+      "language_pair": {
+        "src": "rus",
+        "tgt": "eng"
+      },
+      "params": 25363201,
+      "safetensors_size_bytes": 50743442,
+      "context_size": 256,
+      "max_output_size": 256,
+      "architecture": "MarianMTModel",
+      "last_modified": "2026-05-06T07:15:55+00:00",
+      "downloads": 139,
+      "tags": [
+        "tflite",
+        "safetensors",
+        "marian",
+        "translation",
+        "en",
+        "ru",
+        "dataset:Helsinki-NLP/tatoeba",
+        "dataset:openlanguagedata/flores_plus",
+        "dataset:facebook/bouquet",
+        "license:apache-2.0",
+        "region:us"
+      ]
+    },
+    {
+      "model_id": "Helsinki-NLP/opus-mt_tiny_spa-cat",
+      "short_id": "opus-mt_tiny_spa-cat",
+      "language_pair": {
+        "src": "spa",
+        "tgt": "cat"
+      },
+      "params": 25363201,
+      "safetensors_size_bytes": 50743442,
+      "context_size": 256,
+      "max_output_size": 256,
+      "architecture": "MarianMTModel",
+      "last_modified": "2026-05-06T07:21:43+00:00",
+      "downloads": 58,
+      "tags": [
+        "tflite",
+        "safetensors",
+        "marian",
+        "translation",
+        "es",
+        "ca",
+        "dataset:Helsinki-NLP/tatoeba",
+        "dataset:openlanguagedata/flores_plus",
+        "license:apache-2.0",
+        "region:us"
+      ]
+    },
+    {
+      "model_id": "Helsinki-NLP/opus-mt_tiny_spa-eng",
+      "short_id": "opus-mt_tiny_spa-eng",
+      "language_pair": {
+        "src": "spa",
+        "tgt": "eng"
+      },
+      "params": 25363201,
+      "safetensors_size_bytes": 50743442,
+      "context_size": 256,
+      "max_output_size": 256,
+      "architecture": "MarianMTModel",
+      "last_modified": "2026-05-06T07:22:59+00:00",
+      "downloads": 149,
+      "tags": [
+        "tflite",
+        "safetensors",
+        "marian",
+        "translation",
+        "en",
+        "es",
+        "dataset:Helsinki-NLP/tatoeba",
+        "dataset:openlanguagedata/flores_plus",
+        "dataset:facebook/bouquet",
+        "license:apache-2.0",
+        "region:us"
+      ]
+    },
+    {
+      "model_id": "Helsinki-NLP/opus-mt_tiny_spa-eus",
+      "short_id": "opus-mt_tiny_spa-eus",
+      "language_pair": {
+        "src": "spa",
+        "tgt": "eus"
+      },
+      "params": 25363201,
+      "safetensors_size_bytes": 50743442,
+      "context_size": 256,
+      "max_output_size": 256,
+      "architecture": "MarianMTModel",
+      "last_modified": "2026-05-06T07:19:25+00:00",
+      "downloads": 79,
+      "tags": [
+        "tflite",
+        "safetensors",
+        "marian",
+        "translation",
+        "es",
+        "eu",
+        "dataset:Helsinki-NLP/tatoeba",
+        "dataset:openlanguagedata/flores_plus",
+        "license:apache-2.0",
+        "region:us"
+      ]
+    },
+    {
+      "model_id": "Helsinki-NLP/opus-mt_tiny_spa-glg",
+      "short_id": "opus-mt_tiny_spa-glg",
+      "language_pair": {
+        "src": "spa",
+        "tgt": "glg"
+      },
+      "params": 25363201,
+      "safetensors_size_bytes": 50743442,
+      "context_size": 256,
+      "max_output_size": 256,
+      "architecture": "MarianMTModel",
+      "last_modified": "2026-05-06T07:18:52+00:00",
+      "downloads": 84,
+      "tags": [
+        "tflite",
+        "safetensors",
+        "marian",
+        "translation",
+        "es",
+        "gl",
+        "dataset:Helsinki-NLP/tatoeba",
+        "dataset:openlanguagedata/flores_plus",
+        "license:apache-2.0",
+        "region:us"
+      ]
+    },
+    {
+      "model_id": "Helsinki-NLP/opus-mt_tiny_tur-eng",
+      "short_id": "opus-mt_tiny_tur-eng",
+      "language_pair": {
+        "src": "tur",
+        "tgt": "eng"
+      },
+      "params": 25363201,
+      "safetensors_size_bytes": 50743442,
+      "context_size": 256,
+      "max_output_size": 256,
+      "architecture": "MarianMTModel",
+      "last_modified": "2026-05-06T07:21:00+00:00",
+      "downloads": 111,
+      "tags": [
+        "tflite",
+        "safetensors",
+        "marian",
+        "translation",
+        "en",
+        "tr",
+        "dataset:Helsinki-NLP/tatoeba",
+        "dataset:openlanguagedata/flores_plus",
+        "dataset:facebook/bouquet",
+        "license:apache-2.0",
+        "region:us"
+      ]
+    },
+    {
+      "model_id": "Helsinki-NLP/opus-mt_tiny_zho-eng",
+      "short_id": "opus-mt_tiny_zho-eng",
+      "language_pair": {
+        "src": "zho",
+        "tgt": "eng"
+      },
+      "params": 25363201,
+      "safetensors_size_bytes": 50743442,
+      "context_size": 256,
+      "max_output_size": 256,
+      "architecture": "MarianMTModel",
+      "last_modified": "2026-05-06T07:17:17+00:00",
+      "downloads": 242,
+      "tags": [
+        "tflite",
+        "safetensors",
+        "marian",
+        "translation",
+        "en",
+        "zh",
+        "dataset:Helsinki-NLP/tatoeba",
+        "dataset:openlanguagedata/flores_plus",
+        "license:apache-2.0",
+        "region:us"
+      ]
+    }
+  ]
+}
