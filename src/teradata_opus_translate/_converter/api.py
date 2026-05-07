@@ -578,6 +578,7 @@ def convert_model(
     precision: Literal["fp32", "int8"] = "fp32",
     output_path: str | os.PathLike[str],
     opset: int = 14,
+    ir_version: int = 8,
     verify: bool = True,
     verify_samples: list[str] | None = None,
     no_repeat_ngram_size: int | None = None,
@@ -616,6 +617,15 @@ def convert_model(
         ONNX opset version for the encoder / decoder subgraphs. Defaults
         to ``14``, the BYOM ORT 1.16.3 ceiling. Increase only if you've
         verified BYOM compatibility for the new version.
+    ir_version:
+        ONNX IR version stamped on the produced top-level graph. Default
+        ``8`` -- matches BYOM 7.x's bundled ORT (1.16.3 lineage). BYOM
+        7.0.4 rejects IR >= 9 with
+        ``Unsupported model IR version: 9, max supported IR version: 8``,
+        so the wheel pins this to 8 even though the upstream
+        ``torch.onnx.export`` default is now 9. Set to ``9`` (or higher)
+        only if your downstream ORT supports newer IRs. See
+        ``docs/decisions.md`` Decision 12.
     verify:
         If ``True`` (default), runs full token-parity verification
         against ``MarianMTModel.generate()`` on each sample in
@@ -715,9 +725,11 @@ def convert_model(
 
     out = Path(os.fspath(output_path)).expanduser().resolve()
     LOGGER.info(
-        "Assembling ONNX (precision=%s opset=%d no_repeat_ngram_size=%d early_stopping=%s) -> %s",
+        "Assembling ONNX (precision=%s opset=%d ir_version=%d "
+        "no_repeat_ngram_size=%d early_stopping=%s) -> %s",
         precision,
         opset,
+        ir_version,
         nrns,
         early,
         out,
@@ -730,6 +742,7 @@ def convert_model(
         early_stopping=early,
         package_version=_pkg_version,
         precision=precision,
+        ir_version=ir_version,
     )
     size = written.stat().st_size
     LOGGER.info("Wrote %s (%d bytes / %.2f MiB)", written, size, size / (1024 * 1024))

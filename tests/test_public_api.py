@@ -103,6 +103,7 @@ def test_convert_model_signature_is_locked() -> None:
         "precision",
         "output_path",
         "opset",
+        "ir_version",
         "verify",
         "verify_samples",
         "no_repeat_ngram_size",
@@ -126,6 +127,11 @@ def test_convert_model_signature_is_locked() -> None:
     # Defaults match the locked spec.
     assert params["precision"].default == "fp32"
     assert params["opset"].default == 14
+    # ``ir_version`` default is **8** -- matches BYOM 7.x's bundled ORT
+    # 1.16.3 lineage which rejects IR >= 9. The default must stay 8 even
+    # if upstream ONNX changes the spec default; see Issue #109 and
+    # ``docs/decisions.md`` Decision 12.
+    assert params["ir_version"].default == 8
     assert params["verify"].default is True
     assert params["verify_samples"].default is None
     assert params["no_repeat_ngram_size"].default is None

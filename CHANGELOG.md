@@ -4,6 +4,25 @@ All notable changes to `teradata-opus-translate` are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.5] — 2026-05-07
+
+### Fixed
+
+- **Default ONNX IR version pinned at 8 to match BYOM 7.x bundled ORT.**
+  v1.0.0–1.0.4 produced IR v9 (the upstream `torch.onnx.export` default),
+  which BYOM 7.0.4's bundled ORT (1.16.3 lineage) rejects with
+  `Unsupported model IR version: 9, max supported IR version: 8` raised
+  from `onnxruntime/core/graph/model.cc` at model-load time. The new
+  `ir_version` parameter on `convert_model` (default `8`) lets customers
+  override only if their downstream runtime supports newer IRs. The
+  default is a **hard** pin: even if upstream flips the implicit IR
+  again, this package's output stays BYOM-compatible until the default
+  is explicitly bumped. Opset stays at `14`. See
+  [Issue #109](https://github.com/alexander-smirnov_teradata/teradata-opus-translate/issues/109),
+  [Issue #108](https://github.com/alexander-smirnov_teradata/teradata-opus-translate/issues/108)
+  (the BYOM 7.0.0.4 dev-VM rebuild that surfaced the defect), and
+  `docs/decisions.md` Decision 12.
+
 ## [1.0.4] — 2026-05-07
 
 ### Fixed

@@ -130,6 +130,7 @@ def _build_top_level_graph(
     no_repeat_ngram_size: int,
     early_stopping: bool,
     package_version: str,
+    ir_version: int,
 ) -> onnx.ModelProto:
     """Compose a single top-level ONNX graph that hosts BeamSearch."""
     # Subgraph names must be set explicitly so onnx doesn't reject duplicates.
@@ -220,8 +221,14 @@ def _build_top_level_graph(
         producer_version=package_version,
         opset_imports=opset_imports,
     )
-    # IR version matches what onnxruntime expects for contrib ops.
-    model.ir_version = 9
+    # ONNX IR version. The default (set in :func:`assemble_full_model`'s
+    # caller) is **8** to match BYOM 7.x's bundled ORT 1.16.3 lineage,
+    # which rejects IR >= 9 with
+    # ``Unsupported model IR version: 9, max supported IR version: 8``.
+    # Older versions of this package (1.0.0 - 1.0.4) hard-coded 9 here
+    # which produced artifacts BYOM 7.0.4 could not load. See
+    # ``docs/decisions.md`` Decision 12 and the v1.0.5 CHANGELOG entry.
+    model.ir_version = ir_version
     return model
 
 
@@ -234,6 +241,7 @@ def assemble_full_model(
     early_stopping: bool,
     package_version: str,
     precision: Literal["fp32", "int8"] = "fp32",
+    ir_version: int = 8,
 ) -> Path:
     """Build a single-file ONNX model with embedded BeamSearch for the
     given (already-loaded) Marian model.
@@ -258,6 +266,11 @@ def assemble_full_model(
         subgraphs *before* composition into the BeamSearch wrapper --
         the BeamSearch op is opaque to ORT's quantizer so we cannot
         quantize the assembled file in one shot.
+    ir_version:
+        ONNX IR version stamped on the produced top-level graph. Default
+        ``8`` -- matches BYOM 7.x's bundled ORT 1.16.3 lineage, which
+        caps at IR 8. Set to ``9`` (or higher) only if your downstream
+        ORT supports newer IRs. See ``docs/decisions.md`` Decision 12.
 
     Returns
     -------
@@ -317,6 +330,7 @@ def assemble_full_model(
             no_repeat_ngram_size=no_repeat_ngram_size,
             early_stopping=early_stopping,
             package_version=package_version,
+            ir_version=ir_version,
         )
 
         # Validate before writing: catch shape / type mismatches early.

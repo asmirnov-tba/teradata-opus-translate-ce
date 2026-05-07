@@ -75,6 +75,7 @@ def convert_model(
     precision: Literal["fp32", "int8"] = "fp32",
     output_path: str | os.PathLike[str],
     opset: int = 14,
+    ir_version: int = 8,
     verify: bool = True,
     verify_samples: list[str] | None = None,
     no_repeat_ngram_size: int | None = None,
@@ -91,6 +92,7 @@ def convert_model(
 | `precision` | `"fp32" \| "int8"` | `"fp32"` | Precision mode. v1 ships dynamic int8 only; static int8 is deferred. |
 | `output_path` | `str \| PathLike` | _required_ | Destination `.onnx` path. Parent directories are created if missing; existing files are overwritten. |
 | `opset` | `int` | `14` | ONNX opset for the encoder/decoder subgraphs. `14` matches BYOM 7.x's ORT 1.16.3 ceiling. Increase only if your BYOM version is newer and you've verified compatibility. |
+| `ir_version` | `int` | `8` | ONNX IR version stamped on the produced graph. `8` matches BYOM 7.x's bundled ORT (1.16.3 lineage), which rejects IR ≥ 9 with `Unsupported model IR version: 9, max supported IR version: 8`. Set to `9`+ only if your downstream ORT supports newer IRs. See [`docs/decisions.md`](docs/decisions.md) Decision 12. |
 | `verify` | `bool` | `True` | Run full token-parity verification against `MarianMTModel.generate()` after export. Always runs when set, regardless of model size. Failure raises `AssertionError` naming the first divergent sample. |
 | `verify_samples` | `list[str] \| None` | `None` | Source-language strings used for verification. `None` picks a sensible default set per inferred source language (covers every language in the curated `Helsinki-NLP/opustranslate` collection). Pass an explicit list for custom pairs or local paths. |
 | `no_repeat_ngram_size` | `int \| None` | `None` | Baked into the BeamSearch graph **as a node attribute** at export time. Defaults to `model.config.no_repeat_ngram_size`. Cannot be overridden at SQL-scoring time. |
@@ -105,6 +107,14 @@ def convert_model(
 `ValueError` (unknown precision), `RuntimeError` (output ONNX > 2 GiB; v1
 does not support `external_data`), `AssertionError` (parity divergence when
 `verify=True`).
+
+> **Why is `ir_version` default 8?** BYOM 7.x ships an ONNX runtime
+> (1.16.3 lineage) that caps at IR v8 and rejects IR ≥ 9 at model-load
+> time with `Unsupported model IR version: 9, max supported IR version: 8`.
+> The upstream `torch.onnx.export` default is now 9, so without this pin
+> any artifact this package produces would fail to load on BYOM 7.x.
+> Pinning to 8 keeps the output drop-in compatible with the BYOM
+> versions Teradata ships today; opset stays at 14 either way.
 
 > **Note — SQL-tunable parameters are not export arguments.** The five
 > generation parameters customers most often want to tune (`num_beams`,
