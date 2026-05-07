@@ -3,9 +3,6 @@
 Convert Helsinki-NLP **OPUS** (Marian) translation models into self-contained
 ONNX files for deployment to Teradata Vantage via Bring Your Own Model (BYOM).
 
-[![PyPI version](https://img.shields.io/pypi/v/teradata-opus-translate.svg?style=flat-square)](https://pypi.org/project/teradata-opus-translate/)
-[![Python versions](https://img.shields.io/pypi/pyversions/teradata-opus-translate.svg?style=flat-square)](https://pypi.org/project/teradata-opus-translate/)
-
 ---
 
 ## What it does
