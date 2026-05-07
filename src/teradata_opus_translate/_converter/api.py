@@ -950,6 +950,10 @@ def _verify_token_parity(
         hf_all.append(hf_ids)
 
         # --- ONNX path ---
+        # ``num_return_sequences`` is intentionally absent from the feeds:
+        # as of v1.0.1 it is baked into the graph as a ``Constant(1)``
+        # node and is no longer a top-level input. Passing it here would
+        # raise ``InvalidArgument: Invalid input name``. See Issue #82.
         np_enc = tokenizer(sample, return_tensors="np")
         feeds = {
             "input_ids": np_enc["input_ids"].astype(np.int32),
@@ -957,7 +961,6 @@ def _verify_token_parity(
             "num_beams": np.array([_VERIFY_NUM_BEAMS], dtype=np.int32),
             "min_length": np.array([_VERIFY_MIN_LENGTH], dtype=np.int32),
             "max_length": np.array([_VERIFY_MAX_LENGTH], dtype=np.int32),
-            "num_return_sequences": np.array([_VERIFY_NUM_RETURN_SEQUENCES], dtype=np.int32),
             "length_penalty": np.array([_VERIFY_LENGTH_PENALTY], dtype=np.float32),
             "repetition_penalty": np.array([_VERIFY_REPETITION_PENALTY], dtype=np.float32),
         }

@@ -111,6 +111,12 @@ def onnx_generate_token_ids(
     """
     import numpy as np
 
+    # ``num_return_sequences`` is intentionally absent from the feeds:
+    # as of v1.0.1 it is baked into the graph as a ``Constant(1)`` node
+    # and is no longer a top-level input. ``params["num_return_sequences"]``
+    # is still consulted on the HF side and must be ``1`` for a valid
+    # parity comparison; the ONNX side ignores any other value because
+    # the constant is hard-wired. See Issue #82.
     enc = tokenizer(sentence, return_tensors="np")
     feeds = {
         "input_ids": enc["input_ids"].astype(np.int32),
@@ -118,7 +124,6 @@ def onnx_generate_token_ids(
         "num_beams": np.array([params["num_beams"]], dtype=np.int32),
         "min_length": np.array([params["min_length"]], dtype=np.int32),
         "max_length": np.array([params["max_length"]], dtype=np.int32),
-        "num_return_sequences": np.array([params["num_return_sequences"]], dtype=np.int32),
         "length_penalty": np.array([params["length_penalty"]], dtype=np.float32),
         "repetition_penalty": np.array([params["repetition_penalty"]], dtype=np.float32),
     }

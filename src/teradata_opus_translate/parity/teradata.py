@@ -24,14 +24,20 @@ Generation parameters
 ---------------------
 The ``Const_*`` clauses passed to ``ONNXSeq2Seq`` are derived from
 :data:`teradata_opus_translate.baseline.harness.PARITY_PARAMS`. Only the
-six parameters that BYOM's ``Const_*`` interface exposes are propagated:
+five parameters that BYOM's ``Const_*`` interface meaningfully exposes
+are propagated:
 
 * ``min_length``
 * ``max_length``
 * ``num_beams``
 * ``length_penalty``
 * ``repetition_penalty``
-* ``num_return_sequences``
+
+``num_return_sequences`` is **not** emitted as a ``Const_*`` clause:
+since v1.0.1 (Issue #82) the ONNX graph bakes it as a ``Constant(1)`` node
+feeding ``BeamSearch``'s slot 4, so the corresponding graph input no
+longer exists. ``Const_num_return_sequences(N)`` clauses are silently
+ignored by BYOM in that wiring; we drop them to keep the SQL honest.
 
 The remaining ``PARITY_PARAMS`` keys (``no_repeat_ngram_size``,
 ``early_stopping``) are not surfaced by BYOM's ``Const_*`` API; they were
@@ -118,15 +124,20 @@ DEFAULT_MODEL_ID: str = "opus-mt-de-en"
 # :data:`ONNXSEQ2SEQ_SCHEMA`.
 ONNXSEQ2SEQ_SCHEMA: str = "TD_MLDB"
 
-# Six Const_* keys that ONNXSeq2Seq supports. Order is significant only for
+# Five Const_* keys we emit for ONNXSeq2Seq. Order is significant only for
 # diagnostic logging -- BYOM accepts any ordering.
+#
+# ``num_return_sequences`` is intentionally absent: since v1.0.1 (Issue
+# #82) the ONNX graph bakes it as a ``Constant(1)`` node feeding the
+# ``BeamSearch`` op, so the matching top-level graph input no longer
+# exists. BYOM silently ignores ``Const_num_return_sequences(N)`` in that
+# wiring; emitting the clause anyway would be misleading SQL.
 _CONST_KEYS: tuple[str, ...] = (
     "min_length",
     "max_length",
     "num_beams",
     "length_penalty",
     "repetition_penalty",
-    "num_return_sequences",
 )
 
 # Teradata error codes we treat as "ok, the object wasn't there".
@@ -436,9 +447,10 @@ def fetch_onnx_seq2seq_outputs(
     Raises
     ------
     RuntimeError
-        If a duplicate id is returned from the operator (which would
-        indicate a misconfigured ``Const_num_return_sequences`` -- it
-        must be 1 for a parity comparison).
+        If a duplicate id is returned from the operator. The exported
+        ONNX graph bakes ``num_return_sequences=1`` as a ``Constant``
+        (Issue #82, v1.0.1), so a duplicate id would indicate a deeper
+        BYOM/graph wiring bug rather than a SQL-level misconfiguration.
     """
     sql = build_onnxseq2seq_sql(
         input_database=input_database,
@@ -465,8 +477,10 @@ def fetch_onnx_seq2seq_outputs(
         rid_str = str(rid)
         if rid_str in out:
             raise RuntimeError(
-                f"ONNXSeq2Seq returned duplicate id={rid_str!r}; check "
-                "Const_num_return_sequences (must be 1 for parity)"
+                f"ONNXSeq2Seq returned duplicate id={rid_str!r}; "
+                "num_return_sequences is baked as Constant(1) at export "
+                "time (Issue #82) so duplicates indicate a graph or BYOM "
+                "wiring bug, not a SQL-level misconfiguration"
             )
         # Sequences come back as VARCHAR. teradatasql may yield bytes for
         # very large objects -- coerce defensively.

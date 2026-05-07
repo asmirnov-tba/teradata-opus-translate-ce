@@ -12,7 +12,6 @@ contract):
     - ``num_beams`` int32 ``(1)``
     - ``min_length`` int32 ``(1)``
     - ``max_length`` int32 ``(1)``
-    - ``num_return_sequences`` int32 ``(1)``
     - ``length_penalty`` float32 ``(1)``
     - ``repetition_penalty`` float32 ``(1)``
 
@@ -27,12 +26,22 @@ contract):
       ``model.config``)
     - ``model_type=1`` (encoder-decoder)
 
+* ``num_return_sequences`` is **locked to ``1``** at export time via a
+  ``Constant`` node feeding BeamSearch's slot 4. It is intentionally
+  NOT a top-level graph input. Each input row always returns exactly
+  one translation; ``Const_num_return_sequences(N)`` USING clauses on
+  the BYOM SQL side have no effect (the value is baked into the graph).
+  Rationale: simplifies output semantics for downstream consumers that
+  expect a single-translation-per-row contract. See ``docs/decisions.md``
+  Decision 10 and the v1.0.1 CHANGELOG entry.
+
 This split is deliberate: parameters that BYOM exposes via ``Const_*``
 USING params (``num_beams``, ``min_length``, ``max_length``,
-``num_return_sequences``, ``length_penalty``, ``repetition_penalty``)
-remain graph inputs so they can be overridden per-query in SQL. The
-remaining n-gram / early-stopping behaviour is fixed at export time
-because the BeamSearch contrib op only accepts them as attributes.
+``length_penalty``, ``repetition_penalty``) remain graph inputs so they
+can be overridden per-query in SQL. ``num_return_sequences`` is the
+exception (locked to 1, see above). The remaining n-gram / early-stopping
+behaviour is fixed at export time because the BeamSearch contrib op
+only accepts them as attributes.
 """
 
 from __future__ import annotations
@@ -137,6 +146,26 @@ def _build_top_level_graph(
         early_stopping=early_stopping,
     )
 
+    # ``num_return_sequences`` is locked at export time to ``1`` via a
+    # ``Constant`` node whose output feeds BeamSearch's slot 4 by name.
+    # It is intentionally NOT a top-level graph input -- baking it in
+    # makes ``Const_num_return_sequences(N)`` USING clauses on the BYOM
+    # SQL side have no effect, which is the desired contract: each input
+    # row always returns exactly one translation. See the module
+    # docstring above and ``docs/decisions.md`` Decision 10.
+    num_return_sequences_const = helper.make_node(
+        "Constant",
+        inputs=[],
+        outputs=["num_return_sequences"],
+        name="num_return_sequences_const",
+        value=helper.make_tensor(
+            name="num_return_sequences_value",
+            data_type=TensorProto.INT32,
+            dims=[1],
+            vals=[1],
+        ),
+    )
+
     # BYOM-required top-level inputs.  These remain graph inputs (not
     # initializers / constants) so that BYOM ``Const_*`` USING parameters
     # can override them at scoring time -- see ``docs/decisions.md`` and
@@ -150,9 +179,6 @@ def _build_top_level_graph(
     num_beams = helper.make_tensor_value_info("num_beams", TensorProto.INT32, [1])
     min_length = helper.make_tensor_value_info("min_length", TensorProto.INT32, [1])
     max_length = helper.make_tensor_value_info("max_length", TensorProto.INT32, [1])
-    num_return_sequences = helper.make_tensor_value_info(
-        "num_return_sequences", TensorProto.INT32, [1]
-    )
     length_penalty = helper.make_tensor_value_info("length_penalty", TensorProto.FLOAT, [1])
     repetition_penalty = helper.make_tensor_value_info("repetition_penalty", TensorProto.FLOAT, [1])
 
@@ -162,8 +188,12 @@ def _build_top_level_graph(
         ["batch_size", "num_return_sequences", "max_length"],
     )
 
+    # Order matters only for readability: ONNX runtimes resolve
+    # name-based dependencies regardless of node order, but listing
+    # the Constant before BeamSearch makes the data flow obvious to a
+    # human reader and to any topological-sort-based tooling.
     graph = helper.make_graph(
-        nodes=[bs_node],
+        nodes=[num_return_sequences_const, bs_node],
         name="marian_beamsearch",
         inputs=[
             input_ids,
@@ -171,7 +201,6 @@ def _build_top_level_graph(
             num_beams,
             min_length,
             max_length,
-            num_return_sequences,
             length_penalty,
             repetition_penalty,
         ],

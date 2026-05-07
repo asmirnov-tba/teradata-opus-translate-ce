@@ -354,13 +354,15 @@ def render_report_markdown(artifact: dict[str, Any]) -> str:
     lines.append("### Excluded `PARITY_PARAMS` keys")
     lines.append("")
     lines.append(
-        "BYOM's ``Const_*`` interface only accepts the six numeric generation "
-        "parameters listed under `const_clauses`. The remaining "
-        "`PARITY_PARAMS` keys (`no_repeat_ngram_size=0`, "
+        "BYOM's ``Const_*`` interface only meaningfully accepts the five "
+        "numeric generation parameters listed under `const_clauses`. The "
+        "remaining `PARITY_PARAMS` keys (`no_repeat_ngram_size=0`, "
         "`early_stopping=True`) are not exposed by BYOM but are inert at "
         "their fixed values: the ONNX BeamSearch graph baked into the "
         "exported model already pins them, so the local and Teradata runs "
-        "use the identical search procedure."
+        "use the identical search procedure. `num_return_sequences=1` is "
+        "also baked into the graph as a `Constant` node (Issue #82, "
+        "v1.0.1) and so is no longer surfaced as a SQL `Const_*` clause."
     )
     lines.append("")
     lines.append("## Per-sentence comparison")

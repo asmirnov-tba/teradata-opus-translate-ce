@@ -86,13 +86,16 @@ def test_onnx_loads_in_onnxruntime(converted_onnx: Path) -> None:
     input_names = {i.name for i in sess.get_inputs()}
     output_names = {o.name for o in sess.get_outputs()}
 
+    # ``num_return_sequences`` is intentionally NOT in this set as of
+    # v1.0.1 -- it is baked into the graph as a ``Constant(1)`` node
+    # feeding BeamSearch's slot 4 rather than exposed as a top-level
+    # input. See Issue #82 / docs/decisions.md Decision 10.
     expected_inputs = {
         "input_ids",
         "attention_mask",
         "num_beams",
         "min_length",
         "max_length",
-        "num_return_sequences",
         "length_penalty",
         "repetition_penalty",
     }
@@ -121,6 +124,9 @@ def test_onnx_translates_smoke_set(converted_onnx: Path, fixture: dict) -> None:
     sentences = [pair["de"] for pair in fixture["pairs"]]
     keywords_per_sentence = [pair["en_keywords"] for pair in fixture["pairs"]]
 
+    # ``num_return_sequences`` is intentionally absent from the feeds
+    # as of v1.0.1 -- it is baked into the graph as a ``Constant(1)``
+    # node and is no longer a top-level input. See Issue #82.
     enc = tok(sentences, return_tensors="np", padding=True)
     feeds = {
         "input_ids": enc["input_ids"].astype(np.int32),
@@ -128,7 +134,6 @@ def test_onnx_translates_smoke_set(converted_onnx: Path, fixture: dict) -> None:
         "num_beams": np.array([4], dtype=np.int32),
         "min_length": np.array([1], dtype=np.int32),
         "max_length": np.array([64], dtype=np.int32),
-        "num_return_sequences": np.array([1], dtype=np.int32),
         "length_penalty": np.array([1.0], dtype=np.float32),
         "repetition_penalty": np.array([1.0], dtype=np.float32),
     }
@@ -226,6 +231,11 @@ def _hf_generate_token_ids(model_id: str, sentence: str, params: dict) -> list[i
 
 def _onnx_generate_token_ids(sess, tokenizer, sentence: str, params: dict) -> list[int]:
     """Run a single sentence through the ONNX BeamSearch graph."""
+    # ``num_return_sequences`` is intentionally absent from the feeds
+    # as of v1.0.1 -- it is baked into the graph as a ``Constant(1)``
+    # node and is no longer a top-level input. ``params`` still carries
+    # ``num_return_sequences`` for the HF side; the ONNX side ignores it.
+    # See Issue #82.
     enc = tokenizer(sentence, return_tensors="np")
     feeds = {
         "input_ids": enc["input_ids"].astype(np.int32),
@@ -233,7 +243,6 @@ def _onnx_generate_token_ids(sess, tokenizer, sentence: str, params: dict) -> li
         "num_beams": np.array([params["num_beams"]], dtype=np.int32),
         "min_length": np.array([params["min_length"]], dtype=np.int32),
         "max_length": np.array([params["max_length"]], dtype=np.int32),
-        "num_return_sequences": np.array([params["num_return_sequences"]], dtype=np.int32),
         "length_penalty": np.array([params["length_penalty"]], dtype=np.float32),
         "repetition_penalty": np.array([params["repetition_penalty"]], dtype=np.float32),
     }

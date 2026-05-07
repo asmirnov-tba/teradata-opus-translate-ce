@@ -4,6 +4,24 @@ All notable changes to `teradata-opus-translate` are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.1] — 2026-05-07
+
+### Fixed
+
+- **`num_return_sequences` is now locked at 1 in the produced ONNX graph.**
+  Previously the converter exposed `num_return_sequences` as a top-level
+  graph input, which implied it could be overridden per query via BYOM's
+  `Const_num_return_sequences(N)` USING clause. The locked-to-1 design
+  simplifies output semantics: each input row always returns exactly one
+  translation. As of v1.0.1 the value is baked into the graph as a
+  `Constant(1)` node feeding BeamSearch's slot 4, and the
+  `Const_num_return_sequences(N)` USING clause has no effect (silently
+  ignored by BYOM). The other five SQL-tunable parameters
+  (`num_beams`, `max_length`, `min_length`, `length_penalty`,
+  `repetition_penalty`) remain overridable via their `Const_*` USING
+  clauses. See [Issue #82](https://github.com/alexander-smirnov_teradata/teradata-opus-translate/issues/82)
+  and `docs/decisions.md` Decision 10.
+
 ## [1.0.0] — 2026-05-06
 
 First public release. `teradata-opus-translate` turns a Helsinki-NLP **OPUS**

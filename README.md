@@ -109,12 +109,12 @@ def convert_model(
 does not support `external_data`), `AssertionError` (parity divergence when
 `verify=True`).
 
-> **Note — SQL-tunable parameters are not export arguments.** The six
+> **Note — SQL-tunable parameters are not export arguments.** The five
 > generation parameters customers most often want to tune (`num_beams`,
-> `max_length`, `min_length`, `length_penalty`, `repetition_penalty`,
-> `num_return_sequences`) are deliberately **not** exposed by `convert_model`.
-> They remain as inputs of the produced ONNX graph and are overridden per
-> query at SQL time using the BYOM `Const_*` USING clause:
+> `max_length`, `min_length`, `length_penalty`, `repetition_penalty`)
+> are deliberately **not** exposed by `convert_model`. They remain as
+> inputs of the produced ONNX graph and are overridden per query at
+> SQL time using the BYOM `Const_*` USING clause:
 >
 > ```sql
 > SELECT * FROM TD_MLDB.ONNXSeq2Seq (
@@ -128,14 +128,18 @@ does not support `external_data`), `AssertionError` (parity divergence when
 >     Const_min_length(1)
 >     Const_length_penalty(1.0)
 >     Const_repetition_penalty(1.0)
->     Const_num_return_sequences(1)
 > ) AS dt;
 > ```
 >
 > This keeps a single exported artifact tunable across many SQL workloads
-> without re-export. `no_repeat_ngram_size` and `early_stopping` are the
-> exception — the BeamSearch contrib op only accepts them as node attributes,
-> so they're baked in at export.
+> without re-export. `no_repeat_ngram_size` and `early_stopping` are
+> baked in at export because the BeamSearch contrib op only accepts them
+> as node attributes. **`num_return_sequences` is also fixed at export**
+> (locked to `1` via a `Constant` node in the produced graph): each input
+> always returns exactly one translation, and `Const_num_return_sequences(N)`
+> on the BYOM USING clause has no effect. Rationale and history in
+> [`docs/decisions.md`](docs/decisions.md) Decision 10 and the v1.0.1
+> [CHANGELOG](CHANGELOG.md) entry.
 
 ### `convert_tokenizer`
 
@@ -280,13 +284,15 @@ FROM TD_MLDB.ONNXSeq2Seq (
         Const_min_length(1)
         Const_length_penalty(1.0)
         Const_repetition_penalty(1.0)
-        Const_num_return_sequences(1)
 ) AS dt;
 ```
 
 Adjust the `Const_*` cluster per workload — those are exactly the SQL-time
 overrides for the parameters `convert_model` deliberately keeps off the
-export API.
+export API. Note that `num_return_sequences` is **not** in the cluster:
+each input always returns exactly one translation. The value is baked
+into the produced ONNX graph as a `Constant` node, and any
+`Const_num_return_sequences(N)` USING clause is silently ignored by BYOM.
 
 ## Supported models
 
