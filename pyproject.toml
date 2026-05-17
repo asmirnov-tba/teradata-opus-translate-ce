@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "teradata-opus-translate"
-version = "1.0.5"
+version = "1.1.0"
 description = "Convert Helsinki-NLP OPUS / Marian translation models into self-contained ONNX files for deployment to Teradata Vantage via Bring Your Own Model (BYOM)."
 readme = { file = "README.md", content-type = "text/markdown" }
 requires-python = ">=3.12"
@@ -109,6 +109,14 @@ notebook = [
     "pandas>=2.0,<3.0",
     "teradataml>=20.0.0.0",
 ]
+# Tooling-only extra for ``scripts/publish_to_huggingface.py``. Kept out of
+# the core install — package consumers do not need huggingface_hub or jinja2.
+# See docs/publishing-to-huggingface.md.
+publish = [
+    "huggingface_hub>=0.24,<1.0",
+    "jinja2>=3.1,<4.0",
+    "requests>=2.31,<3.0",
+]
 
 [project.urls]
 Homepage = "https://github.com/asmirnov-tba/teradata-opus-translate-ce"
@@ -160,6 +168,10 @@ ignore = [
 # unicode -- the warnings are intentional code points, not typos, so we
 # silence them in the one file that pins these strings.
 "src/teradata_opus_translate/_converter/api.py" = ["RUF001", "RUF002", "RUF003"]
+# Phase 2 analysis reproducer carries the same native-script fixtures
+# (Greek "ell-eng" sample-3 input) to round-trip the published artifacts;
+# the warnings are intentional code points, not typos.
+"analysis/**" = ["RUF001", "RUF002", "RUF003"]
 
 [tool.ruff.format]
 quote-style = "double"

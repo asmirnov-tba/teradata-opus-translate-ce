@@ -45,21 +45,36 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 PRODUCTION_DIRS = ("src", "tests", "scripts")
 
 
-def _python_files() -> list[Path]:
+def _python_files(repo_root: Path = REPO_ROOT) -> list[Path]:
     """Collect every ``.py`` file under the in-scope production dirs.
 
     Files inside hidden directories (``.venv``, ``.git``, ``.mypy_cache``,
     etc.) and inside ``__pycache__`` are skipped — those either are not
     project source or are build artefacts.
+
+    The hidden-component filter only inspects path components **inside**
+    ``repo_root``: ancestor directories above the repo (e.g. a
+    ``.claude/worktrees/agent-XXX/`` checkout location used by tooling)
+    are intentionally excluded from the filter. Without this guard the
+    walker would treat any checkout under a hidden ancestor as fully
+    hidden and yield zero files (issue #117).
+
+    ``repo_root`` is parameterised so the walker can be exercised
+    against synthetic trees in tests; production code should rely on
+    the default of :data:`REPO_ROOT`.
     """
     files: list[Path] = []
     for top in PRODUCTION_DIRS:
-        root = REPO_ROOT / top
+        root = repo_root / top
         if not root.is_dir():
             continue
         for path in root.rglob("*.py"):
             # Skip anything under a hidden directory or a __pycache__.
-            if any(part.startswith(".") or part == "__pycache__" for part in path.parts):
+            # Filter against the path *relative to repo_root* so that
+            # hidden ancestor directories above the repo (which are
+            # outside the project entirely) don't accidentally match.
+            relative = path.relative_to(repo_root)
+            if any(part.startswith(".") or part == "__pycache__" for part in relative.parts):
                 continue
             files.append(path)
     return files
@@ -154,3 +169,56 @@ def test_policy_guard_detects_a_synthetic_violation(tmp_path: Path) -> None:
         encoding="utf-8",
     )
     assert _teradataml_import_lines(clean) == []
+
+
+def test_python_files_walker_handles_hidden_ancestor_dirs(tmp_path: Path) -> None:
+    """Regression for #117: walker must not be defeated by hidden ancestors.
+
+    When the project is checked out beneath a hidden directory (for
+    example ``.claude/worktrees/agent-XXX/`` that the agent tooling
+    creates), every absolute path under that checkout has a ``.``-
+    prefixed component above the repo root. A naive filter against
+    ``path.parts`` would treat the entire tree as hidden and skip
+    every file, silently disabling the policy guard.
+
+    This test plants a synthetic repo layout under a hidden ancestor
+    directory and asserts the walker still finds the production-style
+    Python files inside it. It also confirms the in-repo hidden-dir
+    filter (``.venv``-style) is still respected.
+    """
+    # Hidden ancestor on purpose — mirrors `.claude/worktrees/...`.
+    hidden_ancestor = tmp_path / ".hidden_workspace"
+    fake_repo = hidden_ancestor / "repo"
+    (fake_repo / "src" / "pkg").mkdir(parents=True)
+    (fake_repo / "tests").mkdir()
+    (fake_repo / "scripts").mkdir()
+
+    # Files that SHOULD be picked up.
+    expected_relative = {
+        Path("src") / "pkg" / "module.py",
+        Path("tests") / "test_thing.py",
+        Path("scripts") / "do_thing.py",
+    }
+    for rel in expected_relative:
+        (fake_repo / rel).write_text("x = 1\n", encoding="utf-8")
+
+    # File under an in-repo hidden dir — must still be filtered out.
+    (fake_repo / "src" / ".venv").mkdir()
+    (fake_repo / "src" / ".venv" / "skip_me.py").write_text(
+        "should_not_be_scanned = True\n", encoding="utf-8"
+    )
+    # File under __pycache__ — must still be filtered out.
+    (fake_repo / "src" / "pkg" / "__pycache__").mkdir()
+    (fake_repo / "src" / "pkg" / "__pycache__" / "module.cpython-311.py").write_text(
+        "should_not_be_scanned = True\n", encoding="utf-8"
+    )
+
+    found = _python_files(repo_root=fake_repo)
+    found_relative = {p.relative_to(fake_repo) for p in found}
+
+    assert found_relative == expected_relative, (
+        "walker either missed files under a hidden ancestor (#117 regression) "
+        "or stopped honouring the in-repo hidden-dir filter. "
+        f"Got {sorted(map(str, found_relative))}, expected "
+        f"{sorted(map(str, expected_relative))}."
+    )

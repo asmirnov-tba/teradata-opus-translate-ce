@@ -1,9 +1,10 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-05-07T02:12:16+00:00",
-  "td_instance": "192.168.178.40 (prod, one-shot per-task auth)",
-  "package_version": "1.0.2",
+  "generated_at": "2026-05-07T15:52:25+00:00",
+  "td_instance": "192.168.178.62 (dev VM, BYOM 7.0.4 + IR 8 fix)",
+  "package_version": "1.0.5",
   "opset": 14,
+  "ir_version": 8,
   "models": [
     {
       "model_id": "Helsinki-NLP/opus-mt_tiny_ara-eng",
@@ -21,7 +22,7 @@
           "output": "The weather is beautiful today."
         }
       ],
-      "query_duration_ms": 1001,
+      "query_duration_ms": 507,
       "error": null,
       "model_blob_bytes": 177301730,
       "tokenizer_blob_bytes": 2163889
@@ -42,7 +43,7 @@
           "output": "Today is a good time."
         }
       ],
-      "query_duration_ms": 991,
+      "query_duration_ms": 506,
       "error": null,
       "model_blob_bytes": 177301730,
       "tokenizer_blob_bytes": 2107844
@@ -63,7 +64,7 @@
           "output": "Hoy hace buen tiempo."
         }
       ],
-      "query_duration_ms": 1031,
+      "query_duration_ms": 547,
       "error": null,
       "model_blob_bytes": 177301730,
       "tokenizer_blob_bytes": 2122888
@@ -84,7 +85,7 @@
           "output": "The weather is beautiful today."
         }
       ],
-      "query_duration_ms": 1032,
+      "query_duration_ms": 486,
       "error": null,
       "model_blob_bytes": 177301730,
       "tokenizer_blob_bytes": 2104618
@@ -105,7 +106,7 @@
           "output": "The weather is nice today."
         }
       ],
-      "query_duration_ms": 1073,
+      "query_duration_ms": 505,
       "error": null,
       "model_blob_bytes": 177301730,
       "tokenizer_blob_bytes": 2221485
@@ -126,7 +127,7 @@
           "output": "Avui el temps és bo."
         }
       ],
-      "query_duration_ms": 1028,
+      "query_duration_ms": 486,
       "error": null,
       "model_blob_bytes": 177301730,
       "tokenizer_blob_bytes": 2108021
@@ -147,7 +148,7 @@
           "output": "Das Wetter ist heute schön."
         }
       ],
-      "query_duration_ms": 1026,
+      "query_duration_ms": 587,
       "error": null,
       "model_blob_bytes": 177301730,
       "tokenizer_blob_bytes": 2104357
@@ -168,7 +169,7 @@
           "output": "Ο καιρός είναι καλός σήμερα."
         }
       ],
-      "query_duration_ms": 1066,
+      "query_duration_ms": 545,
       "error": null,
       "model_blob_bytes": 177301730,
       "tokenizer_blob_bytes": 2222026
@@ -189,7 +190,7 @@
           "output": "Le temps est beau aujourd'hui."
         }
       ],
-      "query_duration_ms": 964,
+      "query_duration_ms": 506,
       "error": null,
       "model_blob_bytes": 177301730,
       "tokenizer_blob_bytes": 2108717
@@ -210,7 +211,7 @@
           "output": "Il tempo è bello oggi."
         }
       ],
-      "query_duration_ms": 1110,
+      "query_duration_ms": 527,
       "error": null,
       "model_blob_bytes": 177301730,
       "tokenizer_blob_bytes": 2107870
@@ -231,7 +232,7 @@
           "output": "Het weer is vandaag mooi."
         }
       ],
-      "query_duration_ms": 1031,
+      "query_duration_ms": 567,
       "error": null,
       "model_blob_bytes": 177301730,
       "tokenizer_blob_bytes": 2101632
@@ -252,7 +253,7 @@
           "output": "Погода сегодня хорошая."
         }
       ],
-      "query_duration_ms": 1072,
+      "query_duration_ms": 505,
       "error": null,
       "model_blob_bytes": 177301730,
       "tokenizer_blob_bytes": 2247063
@@ -273,7 +274,7 @@
           "output": "El clima es agradable hoy."
         }
       ],
-      "query_duration_ms": 1065,
+      "query_duration_ms": 547,
       "error": null,
       "model_blob_bytes": 177301730,
       "tokenizer_blob_bytes": 2110524
@@ -294,7 +295,7 @@
           "output": "Bugün hava çok güzel."
         }
       ],
-      "query_duration_ms": 1047,
+      "query_duration_ms": 466,
       "error": null,
       "model_blob_bytes": 177301730,
       "tokenizer_blob_bytes": 2118825
@@ -315,7 +316,7 @@
           "output": "It's beautiful today."
         }
       ],
-      "query_duration_ms": 1048,
+      "query_duration_ms": 506,
       "error": null,
       "model_blob_bytes": 177301730,
       "tokenizer_blob_bytes": 2108824
@@ -336,7 +337,7 @@
           "output": "Today the weather is beautiful."
         }
       ],
-      "query_duration_ms": 1028,
+      "query_duration_ms": 506,
       "error": null,
       "model_blob_bytes": 177301730,
       "tokenizer_blob_bytes": 2108148
@@ -357,7 +358,7 @@
           "output": "The weather is good today."
         }
       ],
-      "query_duration_ms": 1093,
+      "query_duration_ms": 547,
       "error": null,
       "model_blob_bytes": 177301730,
       "tokenizer_blob_bytes": 2110053
@@ -378,7 +379,7 @@
           "output": "The weather is beautiful today."
         }
       ],
-      "query_duration_ms": 1029,
+      "query_duration_ms": 485,
       "error": null,
       "model_blob_bytes": 177301730,
       "tokenizer_blob_bytes": 2101781
@@ -399,7 +400,7 @@
           "output": "It's good weather today."
         }
       ],
-      "query_duration_ms": 1004,
+      "query_duration_ms": 505,
       "error": null,
       "model_blob_bytes": 177301730,
       "tokenizer_blob_bytes": 2246756
@@ -420,7 +421,7 @@
           "output": "Avui fa bon temps."
         }
       ],
-      "query_duration_ms": 1057,
+      "query_duration_ms": 567,
       "error": null,
       "model_blob_bytes": 177301730,
       "tokenizer_blob_bytes": 2122466
@@ -441,7 +442,7 @@
           "output": "Today's good weather."
         }
       ],
-      "query_duration_ms": 1092,
+      "query_duration_ms": 506,
       "error": null,
       "model_blob_bytes": 177301730,
       "tokenizer_blob_bytes": 2110235
@@ -462,7 +463,7 @@
           "output": "Gaur eguraldi ona egiten du."
         }
       ],
-      "query_duration_ms": 1045,
+      "query_duration_ms": 486,
       "error": null,
       "model_blob_bytes": 177301730,
       "tokenizer_blob_bytes": 2120194
@@ -483,7 +484,7 @@
           "output": "Hoxe hai un bo tempo."
         }
       ],
-      "query_duration_ms": 989,
+      "query_duration_ms": 506,
       "error": null,
       "model_blob_bytes": 177301730,
       "tokenizer_blob_bytes": 2126895
@@ -504,7 +505,7 @@
           "output": "Today the weather is nice."
         }
       ],
-      "query_duration_ms": 1025,
+      "query_duration_ms": 546,
       "error": null,
       "model_blob_bytes": 177301730,
       "tokenizer_blob_bytes": 2119128
@@ -525,7 +526,7 @@
           "output": "The weather is good today."
         }
       ],
-      "query_duration_ms": 989,
+      "query_duration_ms": 547,
       "error": null,
       "model_blob_bytes": 177301730,
       "tokenizer_blob_bytes": 2045516
@@ -536,6 +537,6 @@
     "success": 25,
     "failed": 0,
     "errored": 0,
-    "total_duration_seconds": 284
+    "total_duration_seconds": 231
   }
 }

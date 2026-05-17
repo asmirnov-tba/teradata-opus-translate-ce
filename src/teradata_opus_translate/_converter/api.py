@@ -554,6 +554,85 @@ def _infer_source_lang(source: str) -> str | None:
     return parts[0]
 
 
+# 2-letter ISO 639-1 -> 3-letter ISO 639-3 map for the source/target codes
+# that appear in published ``Helsinki-NLP/opus-mt-*`` repos.  Phase 3's
+# calibration loader (see ``calibration.py``) only knows 3-letter codes
+# because Tatoeba_mt configs use the 3-letter form.  This map covers the
+# 25 published ``opus-mt_tiny_*`` pairs (which are already 3-letter, so the
+# map is a no-op for them) and the legacy ``opus-mt-de-en``-style repos
+# used by the slow-lane int8 test fixture.  Extend the map (and document
+# the reason) when a new pair needs static calibration.
+_ISO1_TO_ISO3 = {
+    "ar": "ara",
+    "ca": "cat",
+    "de": "deu",
+    "el": "ell",
+    "en": "eng",
+    "es": "spa",
+    "eu": "eus",
+    "fr": "fra",
+    "gl": "glg",
+    "it": "ita",
+    "ko": "kor",
+    "nl": "nld",
+    "ru": "rus",
+    "tr": "tur",
+    "zh": "zho",
+}
+
+
+def _normalise_lang_code(code: str | None) -> str | None:
+    """Return a 3-letter ISO 639-3 code for ``code`` if known, else ``None``.
+
+    Pass-through for already-3-letter codes; lookup via :data:`_ISO1_TO_ISO3`
+    for 2-letter codes.
+    """
+    if code is None:
+        return None
+    if len(code) == 3 and code.lower() == code:
+        return code
+    return _ISO1_TO_ISO3.get(code.lower())
+
+
+def _infer_pair_3letter(source: str) -> tuple[str, str] | None:
+    """Infer ``(src3, tgt3)`` 3-letter language pair from an HF model id.
+
+    Returns ``None`` if the pair cannot be derived (custom forks, local
+    paths without a Helsinki-NLP naming convention, etc.).  Recognised
+    patterns mirror :func:`_infer_source_lang` but include the target code:
+
+    * ``Helsinki-NLP/opus-mt_tiny_{src3}-{tgt3}`` (curated collection)
+    * ``Helsinki-NLP/opus-mt-{src1}-{tgt1}`` (bulk Helsinki-NLP catalogue)
+    * ``Helsinki-NLP/opus-mt-tc[-big]-{src}-{tgt}`` (Tatoeba-Challenge)
+    """
+    name = source.rsplit("/", 1)[-1]
+    if name.startswith("opus-mt_tiny_"):
+        rest = name[len("opus-mt_tiny_") :]
+        parts = rest.split("-")
+        if len(parts) < 2:
+            return None
+        src3 = _normalise_lang_code(parts[0])
+        tgt3 = _normalise_lang_code(parts[1])
+        if src3 and tgt3:
+            return src3, tgt3
+        return None
+    if not name.startswith("opus-mt-"):
+        return None
+    rest = name[len("opus-mt-") :]
+    if rest.startswith("tc-big-"):
+        rest = rest[len("tc-big-") :]
+    elif rest.startswith("tc-"):
+        rest = rest[len("tc-") :]
+    parts = rest.split("-")
+    if len(parts) < 2:
+        return None
+    src3 = _normalise_lang_code(parts[0])
+    tgt3 = _normalise_lang_code(parts[1])
+    if src3 and tgt3:
+        return src3, tgt3
+    return None
+
+
 def _setup_logging(verbose: bool, log_level: str | int | None) -> None:
     """Lightweight logging configuration for CLI / one-shot callers."""
     if log_level is not None:
@@ -586,6 +665,7 @@ def convert_model(
     cache_dir: str | os.PathLike[str] | None = None,
     verbose: bool = False,
     log_level: str | int | None = None,
+    calibration_pair: str | None = None,
 ) -> ConvertModelResult:
     """Convert a HuggingFace Marian model to a single ONNX file with
     embedded ``com.microsoft.BeamSearch``.
@@ -599,17 +679,27 @@ def convert_model(
         local source; everything else is passed to ``from_pretrained``
         as an HF id.
     precision:
-        ``"fp32"`` (default) or ``"int8"``. The ``"int8"`` path applies
-        :func:`onnxruntime.quantization.quantize_dynamic` to the encoder
-        and decoder subgraphs *before* they are composed into the
-        ``com.microsoft.BeamSearch`` wrapper graph (the BeamSearch op is
-        opaque to ORT's quantizer, so we cannot quantize the assembled
-        file in one shot). Output is roughly half the fp32 size
-        (~350 MiB vs ~710 MiB on opus-mt-de-en; the embedding tables
-        stay fp32 and the BeamSearch wrapper is small but non-zero
-        overhead) with a small token-parity divergence on a minority
-        of samples; see ``docs/decisions.md`` for the full recipe and
-        tolerance.
+        ``"fp32"`` (default) or ``"int8"``.  The ``"int8"`` path applies
+        the weight-only int8 rewriter (v1.1.0, Issue #160) to the
+        encoder and decoder subgraphs *before* they are composed into
+        the ``com.microsoft.BeamSearch`` wrapper graph (the BeamSearch
+        op is opaque to ORT's quantizer, so we cannot quantize the
+        assembled file in one shot).  Every ``MatMul`` whose B input is
+        a 2-D fp32 const initializer is rewritten to store the weight
+        as int8 + a per-channel symmetric scale, with a
+        ``DequantizeLinear`` node inserted at inference time.
+        Activations stay fp32; no calibration corpus is consulted.
+        Output is roughly half the fp32 size (~90 MiB vs ~170 MiB on
+        the curated ``opus-mt_tiny_*`` collection; the embedding
+        tables stay fp32 and the BeamSearch wrapper is small but
+        non-zero overhead) with a small token-parity divergence on a
+        minority of samples; see ``docs/decisions.md`` for the full
+        recipe and tolerance.
+
+        The earlier dynamic / static activation-quantization recipes
+        were removed in v1.1.0 -- they collapsed beam search on the
+        ``*-eng`` Marian pairs under BYOM 7.0.0.4's pinned ORT 1.13.1.
+        See PR #138, Issue #140, and the v1.1.0 CHANGELOG entry.
     output_path:
         Destination ``.onnx`` file path. Parent directories are created
         if missing; the file is overwritten if it already exists.
@@ -653,6 +743,14 @@ def convert_model(
         If ``True``, configure the package logger at INFO level.
     log_level:
         Explicit logging level; takes precedence over ``verbose``.
+    calibration_pair:
+        Deprecated as of v1.1.0 (Issue #160).  The v1.0.x int8 static
+        quantization recipe took this as a Tatoeba corpus selector; the
+        v1.1.0 weight-only int8 recipe does not consult a calibration
+        corpus, so the kwarg is now a no-op.  Passing a non-None value
+        triggers a ``DeprecationWarning``.  Retained on the signature
+        for backward compatibility with v1.0.x callers; will be removed
+        in a future major release.
 
     Returns
     -------
@@ -712,6 +810,23 @@ def convert_model(
     if cache_dir is not None:
         from_pretrained_kwargs["cache_dir"] = os.fspath(cache_dir)
     model = MarianMTModel.from_pretrained(resolved, **from_pretrained_kwargs).eval()
+
+    # v1.1.0 (Issue #160): the int8 recipe is weight-only and does not
+    # consult a calibration corpus.  ``calibration_pair`` is retained on
+    # the public signature for backward compatibility -- the v1.0.x int8
+    # static-quantization recipe took it as a corpus selector.  Warn
+    # callers that pass a non-None value so they can drop it from their
+    # invocation; it is now a no-op.
+    if calibration_pair is not None:
+        import warnings
+
+        warnings.warn(
+            "calibration_pair is deprecated and ignored as of v1.1.0; the int8 "
+            "recipe is now weight-only and does not consult a calibration corpus. "
+            "Remove the kwarg from your convert_model() call (Issue #160).",
+            DeprecationWarning,
+            stacklevel=2,
+        )
 
     cfg = model.config
     nrns = (
@@ -781,38 +896,55 @@ def convert_model(
 # faithful, so any divergence is a converter bug (cf. Decision 9 in
 # ``docs/decisions.md``).
 #
-# int8: dynamic quantization is lossy; some samples are expected to drift
-# at the token-id level even when their decoded text is fluent and
-# semantically identical. The locked tolerance for v1 (see the int8
-# decision entry in ``docs/decisions.md``) is:
+# int8: weight-only quantization (v1.1.0, Issue #160) is lossy because each
+# rewritten ``MatMul`` reconstructs an int8-then-dequantized weight at
+# inference time.  The per-channel symmetric scale recovers the original
+# fp32 weight to within ``max(|W[:,c]|) / 254`` per channel, which is
+# small enough that decoded text is almost always byte-identical to fp32
+# -- but a minority of samples drift at the token-id level on small /
+# tricky-input pairs.  The locked v1.1.0 tolerance (see the int8 decision
+# entry in ``docs/decisions.md``) is:
 #
 #   * For *every* sample, the first ``_INT8_PREFIX_MUST_MATCH`` token IDs
 #     must match exactly. The first slot is always the BOS / decoder
 #     start token (58100 for Marian); the second slot is the first
 #     content token, whose match is a strong signal that the encoder
 #     output, embedding lookup, and seed-step decoder all survived
-#     quantization. We do *not* require the third token to match -- on
-#     opus-mt-de-en the third slot was the first observed quantization
-#     drift point on the German default sample
-#     "Ich lese ein Buch über Maschinelles Lernen."
-#     (HF emitted token id 22, the int8 ONNX emitted 1505), so a
-#     stricter prefix would fail the 5-sample default verification.
+#     the weight-only rewrite.
 #   * The number of samples whose full token-id sequence diverges must
 #     be at most ``max(1, ceil(N * _INT8_MAX_MISMATCH_FRACTION))`` where
 #     N is the sample count. The ``max(1, ...)`` floor handles small
-#     sample sets (the default ``de`` set ships 3 samples; 20% of 3 is
-#     0.6 which would round down to 0 and refuse the empirically-known
+#     sample sets (the default ``de`` set ships 3 samples; 10% of 3 is
+#     0.3 which would round down to 0 and refuse the empirically-known
 #     1-sample drift). For the 3-sample German default we allow 1
-#     mismatch; for a 5-sample set we allow 1; for a 20-sample set we
-#     allow 4. The opus-mt-de-en default-samples run lands at exactly
-#     1/3 mismatches.
+#     mismatch; for a 10-sample set we allow 1; for a 20-sample set we
+#     allow 2.
+#
+# Empirical evidence for the 10% threshold (Phase 5 Gate 3 report on
+# branch ``160-phase5-weight-only-int8``, 100-sentence sweep per pair
+# across the 25 curated ``opus-mt_tiny_*`` pairs):
+#
+#   * 20 / 25 pairs PASS: byte-identical 92-100 / 100, BLEU mean 96.6+.
+#   * 3 / 25 NEEDS-REVIEW: byte-identical 92-95 / 100, no broken decodes.
+#   * 2 / 25 BROKEN (deu-eng, ell-eng): trigram-runaway patterns on a
+#     minority of inputs (24-31 / 100); shipped anyway because the bulk
+#     of decodes are clean and these are known-limited failure modes.
+#
+# The 10% bound is tight enough to flag a regression on a PASS pair (the
+# typical sweep produces 0-3 mismatches per 100) while loose enough to
+# absorb the 1/3 mismatch the 3-sample default verification routinely
+# lands on for the more challenging pairs.  Tightening below 10% would
+# refuse the empirical baseline; loosening above 10% would let a
+# regression slip through.  The Gate 1 anchor test (eng-nld Dubai
+# donation) is byte-identical fp32==int8, so the eng-nld default
+# verification passes with 0 mismatches.
 #
 # Both thresholds are pinned in the dedicated int8 test
 # (``tests/test_int8_quantization.py``); changes need a corresponding
 # decision-log update.
 
 _INT8_PREFIX_MUST_MATCH = 2
-_INT8_MAX_MISMATCH_FRACTION = 0.20
+_INT8_MAX_MISMATCH_FRACTION = 0.10
 
 
 def _check_parity_tolerance(
@@ -849,8 +981,10 @@ def _check_parity_tolerance(
             default=0,
         )
     elif precision == "int8":
-        # ``max(1, ceil(...))`` so the small-N case (3-sample German
-        # default) still permits the empirically-observed 1-sample drift.
+        # v1.1.0 weight-only recipe.  ``max(1, ceil(...))`` so the
+        # small-N case (3-sample German default) still permits the
+        # empirically-observed 1-sample drift; see the tolerance
+        # comment block below for the gate-evidence rationale.
         max_total_mismatches = max(1, math.ceil(len(samples) * _INT8_MAX_MISMATCH_FRACTION))
         prefix_must_match = _INT8_PREFIX_MUST_MATCH
     else:  # pragma: no cover - guarded earlier
@@ -934,6 +1068,16 @@ def _verify_token_parity(
 
     sess = ort.InferenceSession(str(onnx_path), providers=["CPUExecutionProvider"])
 
+    # The v1.1.0 weight-only int8 recipe keeps ``num_beams`` as a top-level
+    # graph input (BYOM ``Const_num_beams`` USING-clause tunable) for both
+    # fp32 and int8 artifacts.  The Phase 4 (#153) int8 build path used to
+    # bake ``num_beams=4`` into the BeamSearch contrib op; that path was
+    # removed in v1.1.0 with the rest of the static-quant recipe.  We
+    # still inspect the session signature so the verifier can run against
+    # v1.0.x int8 artifacts a caller might point us at.
+    onnx_input_names = {i.name for i in sess.get_inputs()}
+    num_beams_is_baked = "num_beams" not in onnx_input_names
+
     hf_all: list[list[int]] = []
     onnx_all: list[list[int]] = []
     mismatches = 0
@@ -971,12 +1115,13 @@ def _verify_token_parity(
         feeds = {
             "input_ids": np_enc["input_ids"].astype(np.int32),
             "attention_mask": np_enc["attention_mask"].astype(np.int32),
-            "num_beams": np.array([_VERIFY_NUM_BEAMS], dtype=np.int32),
             "min_length": np.array([_VERIFY_MIN_LENGTH], dtype=np.int32),
             "max_length": np.array([_VERIFY_MAX_LENGTH], dtype=np.int32),
             "length_penalty": np.array([_VERIFY_LENGTH_PENALTY], dtype=np.float32),
             "repetition_penalty": np.array([_VERIFY_REPETITION_PENALTY], dtype=np.float32),
         }
+        if not num_beams_is_baked:
+            feeds["num_beams"] = np.array([_VERIFY_NUM_BEAMS], dtype=np.int32)
         sequences = sess.run(None, feeds)[0]  # (1, num_return_sequences, max_length)
         onnx_ids = _strip_padding(sequences[0, 0].tolist(), pad_token_id, eos_token_id)
         onnx_all.append(onnx_ids)

@@ -111,6 +111,13 @@ def test_convert_model_signature_is_locked() -> None:
         "cache_dir",
         "verbose",
         "log_level",
+        # Added by Phase 3 (#140) for the static int8 calibration recipe;
+        # deprecated as of v1.1.0 (Issue #160) when the int8 recipe was
+        # switched to the calibration-free weight-only rewriter.  The
+        # kwarg is retained on the signature for v1.0.x backward compat
+        # but is a no-op (passing a non-None value triggers a
+        # ``DeprecationWarning``).
+        "calibration_pair",
     ]
 
     # ``source`` is the only positional-or-keyword parameter.
@@ -139,6 +146,7 @@ def test_convert_model_signature_is_locked() -> None:
     assert params["cache_dir"].default is None
     assert params["verbose"].default is False
     assert params["log_level"].default is None
+    assert params["calibration_pair"].default is None
 
 
 def test_convert_model_does_not_expose_sql_tunable_params() -> None:

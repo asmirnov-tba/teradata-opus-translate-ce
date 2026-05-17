@@ -358,6 +358,15 @@ id). The default sample set covers every language in the
   accepts our 3-input encoder layout.
 - **MarianMT / OPUS only.** No T5, BART, NLLB, or mBART support in v1.
 
+## Operations
+
+- **Publishing converted models to Hugging Face.** Operator runbook for
+  pushing the 25 ONNX-converted models from S3 to HF private repos under
+  a curated collection: see
+  [`docs/publishing-to-huggingface.md`](docs/publishing-to-huggingface.md).
+  Driver script: `scripts/publish_to_huggingface.py` (env-driven, dry-run
+  capable, idempotent).
+
 ## Acknowledgements
 
 - Microsoft for the `com.microsoft.BeamSearch` contrib op pattern, which

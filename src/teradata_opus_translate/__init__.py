@@ -27,7 +27,7 @@ All production-style Teradata access in this package uses ``teradatasql``
 notebook under ``notebooks/``. See ``README.md`` for the full convention.
 """
 
-__version__ = "1.0.5"
+__version__ = "1.1.0"
 
 from teradata_opus_translate._converter.api import (
     ConvertModelResult,

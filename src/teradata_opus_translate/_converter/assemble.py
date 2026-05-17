@@ -49,7 +49,7 @@ from __future__ import annotations
 import logging
 import tempfile
 from pathlib import Path
-from typing import Any, Literal
+from typing import Literal
 
 import onnx
 from onnx import TensorProto, helper
@@ -59,7 +59,9 @@ from teradata_opus_translate._converter.export import (
     export_decoder,
     export_encoder,
 )
-from teradata_opus_translate._converter.quantize import quantize_subgraph
+from teradata_opus_translate._converter.quantize import (
+    quantize_subgraph_weights_only,
+)
 
 LOGGER = logging.getLogger(__name__)
 
@@ -126,13 +128,22 @@ def _build_top_level_graph(
     *,
     encoder_proto: onnx.ModelProto,
     decoder_proto: onnx.ModelProto,
-    config: Any,
+    config: object,
     no_repeat_ngram_size: int,
     early_stopping: bool,
     package_version: str,
     ir_version: int,
 ) -> onnx.ModelProto:
-    """Compose a single top-level ONNX graph that hosts BeamSearch."""
+    """Compose a single top-level ONNX graph that hosts BeamSearch.
+
+    ``num_beams`` is always exposed as a top-level graph input so BYOM
+    ``Const_num_beams(N)`` USING clauses can override it per query.
+    The Phase 4 (PR #154) recipe baked ``num_beams=4`` into the graph
+    as a workaround for activation-quantization-induced beam-search
+    collapse; the v1.1.0 weight-only recipe (Issue #160) keeps
+    activations in fp32 so that drift cannot recur, and the baking
+    machinery was removed.
+    """
     # Subgraph names must be set explicitly so onnx doesn't reject duplicates.
     encoder_proto.graph.name = "marian_encoder"
     decoder_proto.graph.name = "marian_decoder"
@@ -190,21 +201,24 @@ def _build_top_level_graph(
     )
 
     # Order matters only for readability: ONNX runtimes resolve
-    # name-based dependencies regardless of node order, but listing
-    # the Constant before BeamSearch makes the data flow obvious to a
-    # human reader and to any topological-sort-based tooling.
+    # name-based dependencies regardless of node order, but listing the
+    # Constant before BeamSearch makes the data flow obvious to a human
+    # reader and to any topological-sort-based tooling.
+    nodes = [num_return_sequences_const, bs_node]
+    graph_inputs = [
+        input_ids,
+        attention_mask,
+        num_beams,
+        min_length,
+        max_length,
+        length_penalty,
+        repetition_penalty,
+    ]
+
     graph = helper.make_graph(
-        nodes=[num_return_sequences_const, bs_node],
+        nodes=nodes,
         name="marian_beamsearch",
-        inputs=[
-            input_ids,
-            attention_mask,
-            num_beams,
-            min_length,
-            max_length,
-            length_penalty,
-            repetition_penalty,
-        ],
+        inputs=graph_inputs,
         outputs=[sequences],
         initializer=[],
     )
@@ -261,11 +275,19 @@ def assemble_full_model(
     package_version:
         Version stamped into the model's ``producer_version`` field.
     precision:
-        ``"fp32"`` (default) or ``"int8"``. The ``"int8"`` path runs
-        :func:`...quantize.quantize_subgraph` on the encoder and decoder
+        ``"fp32"`` (default) or ``"int8"``.  The ``"int8"`` path applies
+        the weight-only int8 rewriter (see :mod:`...quantize` and
+        :mod:`...weight_only_quantize`) to the encoder and decoder
         subgraphs *before* composition into the BeamSearch wrapper --
         the BeamSearch op is opaque to ORT's quantizer so we cannot
         quantize the assembled file in one shot.
+
+        As of v1.1.0 (Issue #160), the int8 recipe is weight-only:
+        ``MatMul`` weights with a 2-D fp32 const B input are stored as
+        int8 + per-channel symmetric scales with an inserted
+        ``DequantizeLinear``.  Activations stay fp32; no calibration
+        corpus is needed.  The earlier static / dynamic recipes were
+        removed in v1.1.0 -- see Issue #160 and ``docs/decisions.md``.
     ir_version:
         ONNX IR version stamped on the produced top-level graph. Default
         ``8`` -- matches BYOM 7.x's bundled ORT 1.16.3 lineage, which
@@ -282,8 +304,8 @@ def assemble_full_model(
     RuntimeError
         If the resulting ONNX file would exceed 2 GiB. The v1 API does
         not support ``external_data``; ``precision="int8"`` produces a
-        roughly 25%-of-fp32 artifact and is the recommended escape hatch
-        for larger pairs.
+        roughly half-of-fp32 artifact and is the recommended escape
+        hatch for larger pairs.
     """
     cfg = model.config
     output_path = Path(output_path).expanduser().resolve()
@@ -300,20 +322,21 @@ def assemble_full_model(
         decoder_proto = export_decoder(model, dec_fp32, opset=opset)
 
         if precision == "int8":
-            # Quantize the encoder + decoder subgraphs as standalone
-            # ONNX files BEFORE composition. The com.microsoft.BeamSearch
-            # contrib op is opaque to ORT's quantizer (it cannot recurse
-            # through subgraph node attributes), so quantizing the
-            # already-assembled top-level file would be a no-op for the
-            # weights that matter.
+            # v1.1.0 (Issue #160).  Weight-only rewrite of the
+            # encoder/decoder subgraphs: weights -> int8 + per-channel
+            # symmetric scales, with an inserted ``DequantizeLinear``
+            # node feeding each rewritten ``MatMul``.  Activations stay
+            # fp32, so this recipe needs no calibration corpus.  The
+            # previous static / dynamic activation-quantization recipes
+            # were removed in v1.1.0 because they produced beam-search
+            # collapse on the ``*-eng`` Marian pairs under BYOM 7.0.0.4's
+            # pinned ORT 1.13.1 (see PR #138, Issue #140, Issue #160).
             enc_int8 = tmp / "encoder_int8.onnx"
             dec_int8 = tmp / "decoder_int8.onnx"
-            LOGGER.info("Applying int8 dynamic quantization to encoder subgraph")
-            quantize_subgraph(enc_fp32, enc_int8)
-            LOGGER.info("Applying int8 dynamic quantization to decoder subgraph")
-            quantize_subgraph(dec_fp32, dec_int8)
-            # Reload the quantized protos and substitute them into the
-            # BeamSearch composition.
+            LOGGER.info("Applying weight-only int8 rewrite to encoder subgraph")
+            quantize_subgraph_weights_only(enc_fp32, enc_int8)
+            LOGGER.info("Applying weight-only int8 rewrite to decoder subgraph")
+            quantize_subgraph_weights_only(dec_fp32, dec_int8)
             encoder_proto = onnx.load(str(enc_int8))
             decoder_proto = onnx.load(str(dec_int8))
         elif precision != "fp32":  # defensive; the public API also validates
@@ -323,6 +346,7 @@ def assemble_full_model(
             "Composing top-level graph with com.microsoft.BeamSearch (precision=%s)",
             precision,
         )
+
         full = _build_top_level_graph(
             encoder_proto=encoder_proto,
             decoder_proto=decoder_proto,

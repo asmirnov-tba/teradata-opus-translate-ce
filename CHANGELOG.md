@@ -4,6 +4,88 @@ All notable changes to `teradata-opus-translate` are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+## [1.1.0] — 2026-05-17
+
+### Changed
+
+- **`precision="int8"` now uses the weight-only int8 recipe (BREAKING).**
+  The v1.0.x int8 path applied
+  `onnxruntime.quantization.quantize_static` (Phase 3 / 4) to the
+  encoder and decoder subgraphs, which inserted activation-quantization
+  ops (`QuantizeLinear` / `DynamicQuantizeLinear`) in front of every
+  rewritten `MatMul`.  Phase 2 (PR #138), Phase 3 (Issue #140), and
+  Phase 4 (PR #154) showed that recipe drives beam search into a
+  degenerate basin (runaway-token loops) on the `*-eng` Marian pairs
+  under BYOM 7.0.0.4's pinned ORT 1.13.1, regardless of dynamic vs
+  static calibration or whether `num_beams` was baked into the graph.
+  v1.1.0 replaces it with the weight-only rewriter introduced in
+  Issue #160: every `MatMul` whose B input is a 2-D fp32 const
+  initializer is stored as int8 + per-channel symmetric scales with a
+  `DequantizeLinear` node inserted at inference time, and activations
+  stay fp32.  Empirical evidence from the Phase 5 Gate 3 25-pair
+  100-sentence sweep (`analysis/phase5_weight_only_int8/`): 20 / 25
+  pairs PASS with ≥ 92 byte-identical decodes and BLEU ≥ 96.6 vs fp32;
+  3 NEEDS-REVIEW pairs (no broken decodes); 2 BROKEN pairs (deu-eng,
+  ell-eng) on a minority of inputs.  Artifact size is roughly half of
+  fp32 (~90 MiB vs ~170 MiB on the curated `opus-mt_tiny_*` collection).
+  See [Issue #160](https://github.com/alexander-smirnov_teradata/teradata-opus-translate/issues/160).
+
+- **Int8 parity tolerance tightened from 20% to 10%.** Weight-only
+  drift is much narrower than the v1.0.x activation-quantization
+  drift; the small-N floor (`max(1, ceil(N * 0.10))`) still permits
+  the empirically-observed 1-sample mismatch on the 3-sample German
+  default verification set, while the 10% bound flags regressions on
+  PASS-pair sweeps that typically produce 0–3 mismatches per 100.
+
+- **`num_beams` is once again a top-level graph input on int8
+  artifacts.** Phase 4 (PR #154) baked `num_beams=4` into the
+  BeamSearch contrib op for int8 builds to work around
+  activation-quantization-induced beam collapse.  The weight-only
+  recipe keeps activations in fp32 so that drift cannot recur, and
+  the baking machinery was removed.  `Const_num_beams(N)` USING
+  clauses on the int8 artifact are now respected the same as on fp32.
+
+### Removed
+
+- **Static / dynamic int8 recipes.** `quantize.py` no longer ships
+  `quantize_subgraph`, `_INT8_OP_TYPES`, `_INT8_NODES_TO_EXCLUDE`, or
+  the `_ListCalibrationDataReader` helper.  The
+  `_converter/calibration.py` module (Tatoeba corpus loader) and its
+  `test_calibration.py` were removed entirely — no production code
+  path needs a calibration corpus any more.
+
+- **`bake_num_beams` kwarg on `assemble_full_model`.** Internal-only
+  knob introduced in PR #154 for the int8 path; removed alongside the
+  static-quant recipe it supported.  No public callers existed.
+
+- **`datasets` and `platformdirs` runtime dependencies.** Both were
+  pulled in only by the calibration loader; with that module gone the
+  package goes back to its pre-#153 minimal core dependency set.
+
+### Deprecated
+
+- **`calibration_pair` kwarg on `convert_model`.** Retained on the
+  signature for backward compatibility with v1.0.x callers but is now
+  a no-op.  Passing a non-None value triggers a `DeprecationWarning`;
+  the kwarg will be removed in a future major release.
+
+### Added
+
+- **Hugging Face publisher tooling.** New `scripts/publish_to_huggingface.py`
+  publishes the 25 ONNX-converted MarianMT models listed in
+  `data/s3_manifest.json` to private Hugging Face repos under a
+  configurable target org, renders a locked-layout model card from
+  `scripts/templates/hf_model_card.md.j2`, and adds each repo to a
+  curated collection. Idempotent (re-runs skip existing repos and
+  collection memberships); per-model failures don't abort the batch.
+  See `docs/publishing-to-huggingface.md` for the operator runbook.
+  Adds a `publish` optional-dependencies extra for `huggingface_hub`,
+  `jinja2`, and `requests`. Tooling only — no package version bump.
+  See
+  [Issue #120](https://github.com/alexander-smirnov_teradata/teradata-opus-translate/issues/120).
+
 ## [1.0.5] — 2026-05-07
 
 ### Fixed

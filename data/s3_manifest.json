@@ -1,8 +1,8 @@
 {
   "schema_version": "1.0",
   "opset": 14,
-  "package_version": "1.0.2",
-  "uploaded_at": "2026-05-07T01:58:14+00:00",
+  "package_version": "1.0.5",
+  "uploaded_at": "2026-05-07T15:27:29+00:00",
   "bucket": "teradata-opus-translate-ce",
   "region": "us-east-1",
   "url_template": "https://teradata-opus-translate-ce.s3.us-east-1.amazonaws.com/opus-translate/14/{model_id}/{file}",
@@ -16,8 +16,9 @@
           "url": "https://teradata-opus-translate-ce.s3.us-east-1.amazonaws.com/opus-translate/14/Helsinki-NLP/opus-mt_tiny_ara-eng/model-fp32.onnx"
         },
         "model-int8.onnx": {
-          "size": 94483810,
-          "url": "https://teradata-opus-translate-ce.s3.us-east-1.amazonaws.com/opus-translate/14/Helsinki-NLP/opus-mt_tiny_ara-eng/model-int8.onnx"
+          "size": 94727718,
+          "url": "https://teradata-opus-translate-ce.s3.us-east-1.amazonaws.com/opus-translate/14/Helsinki-NLP/opus-mt_tiny_ara-eng/model-int8.onnx",
+          "sha256": "f0d1693ee537d63021640ef0540aacca56b48a6e3c09e576becc718903d54cb5"
         },
         "tokenizer.json": {
           "size": 2163889,
@@ -34,8 +35,9 @@
           "url": "https://teradata-opus-translate-ce.s3.us-east-1.amazonaws.com/opus-translate/14/Helsinki-NLP/opus-mt_tiny_cat-eng/model-fp32.onnx"
         },
         "model-int8.onnx": {
-          "size": 94483810,
-          "url": "https://teradata-opus-translate-ce.s3.us-east-1.amazonaws.com/opus-translate/14/Helsinki-NLP/opus-mt_tiny_cat-eng/model-int8.onnx"
+          "size": 94727718,
+          "url": "https://teradata-opus-translate-ce.s3.us-east-1.amazonaws.com/opus-translate/14/Helsinki-NLP/opus-mt_tiny_cat-eng/model-int8.onnx",
+          "sha256": "24655b948fe72575d908cefc6f7ec8c64fb09c71d4f01f577bdcd5330c029753"
         },
         "tokenizer.json": {
           "size": 2107844,
@@ -52,8 +54,9 @@
           "url": "https://teradata-opus-translate-ce.s3.us-east-1.amazonaws.com/opus-translate/14/Helsinki-NLP/opus-mt_tiny_cat-spa/model-fp32.onnx"
         },
         "model-int8.onnx": {
-          "size": 94483810,
-          "url": "https://teradata-opus-translate-ce.s3.us-east-1.amazonaws.com/opus-translate/14/Helsinki-NLP/opus-mt_tiny_cat-spa/model-int8.onnx"
+          "size": 94727718,
+          "url": "https://teradata-opus-translate-ce.s3.us-east-1.amazonaws.com/opus-translate/14/Helsinki-NLP/opus-mt_tiny_cat-spa/model-int8.onnx",
+          "sha256": "6e9b3ca7dd14354059a3a6529e029ff04678ac41f3ead1a61d03e70b159371d3"
         },
         "tokenizer.json": {
           "size": 2122888,
@@ -70,8 +73,9 @@
           "url": "https://teradata-opus-translate-ce.s3.us-east-1.amazonaws.com/opus-translate/14/Helsinki-NLP/opus-mt_tiny_deu-eng/model-fp32.onnx"
         },
         "model-int8.onnx": {
-          "size": 94483810,
-          "url": "https://teradata-opus-translate-ce.s3.us-east-1.amazonaws.com/opus-translate/14/Helsinki-NLP/opus-mt_tiny_deu-eng/model-int8.onnx"
+          "size": 94727718,
+          "url": "https://teradata-opus-translate-ce.s3.us-east-1.amazonaws.com/opus-translate/14/Helsinki-NLP/opus-mt_tiny_deu-eng/model-int8.onnx",
+          "sha256": "f8c2c934efcff40b24eb3a2a34e14db7694168ca3c0d978748df96c17b54160f"
         },
         "tokenizer.json": {
           "size": 2104618,
@@ -88,8 +92,9 @@
           "url": "https://teradata-opus-translate-ce.s3.us-east-1.amazonaws.com/opus-translate/14/Helsinki-NLP/opus-mt_tiny_ell-eng/model-fp32.onnx"
         },
         "model-int8.onnx": {
-          "size": 94483810,
-          "url": "https://teradata-opus-translate-ce.s3.us-east-1.amazonaws.com/opus-translate/14/Helsinki-NLP/opus-mt_tiny_ell-eng/model-int8.onnx"
+          "size": 94727718,
+          "url": "https://teradata-opus-translate-ce.s3.us-east-1.amazonaws.com/opus-translate/14/Helsinki-NLP/opus-mt_tiny_ell-eng/model-int8.onnx",
+          "sha256": "f159891d2b5edd604d1a60769aae11ad90062227b487bbff7dae4d86dbdba8e6"
         },
         "tokenizer.json": {
           "size": 2221485,
@@ -106,8 +111,9 @@
           "url": "https://teradata-opus-translate-ce.s3.us-east-1.amazonaws.com/opus-translate/14/Helsinki-NLP/opus-mt_tiny_eng-cat/model-fp32.onnx"
         },
         "model-int8.onnx": {
-          "size": 94483810,
-          "url": "https://teradata-opus-translate-ce.s3.us-east-1.amazonaws.com/opus-translate/14/Helsinki-NLP/opus-mt_tiny_eng-cat/model-int8.onnx"
+          "size": 94727718,
+          "url": "https://teradata-opus-translate-ce.s3.us-east-1.amazonaws.com/opus-translate/14/Helsinki-NLP/opus-mt_tiny_eng-cat/model-int8.onnx",
+          "sha256": "36a878feaeecee7f5939c8149ccd1997ac5ae59e66c8b616334b33516a0d5435"
         },
         "tokenizer.json": {
           "size": 2108021,
@@ -124,8 +130,9 @@
           "url": "https://teradata-opus-translate-ce.s3.us-east-1.amazonaws.com/opus-translate/14/Helsinki-NLP/opus-mt_tiny_eng-deu/model-fp32.onnx"
         },
         "model-int8.onnx": {
-          "size": 94483810,
-          "url": "https://teradata-opus-translate-ce.s3.us-east-1.amazonaws.com/opus-translate/14/Helsinki-NLP/opus-mt_tiny_eng-deu/model-int8.onnx"
+          "size": 94727718,
+          "url": "https://teradata-opus-translate-ce.s3.us-east-1.amazonaws.com/opus-translate/14/Helsinki-NLP/opus-mt_tiny_eng-deu/model-int8.onnx",
+          "sha256": "385649daeb5d508cb2427c1a45bb3fea7d61267f660b802c281b3840379fa221"
         },
         "tokenizer.json": {
           "size": 2104357,
@@ -142,8 +149,9 @@
           "url": "https://teradata-opus-translate-ce.s3.us-east-1.amazonaws.com/opus-translate/14/Helsinki-NLP/opus-mt_tiny_eng-ell/model-fp32.onnx"
         },
         "model-int8.onnx": {
-          "size": 94483810,
-          "url": "https://teradata-opus-translate-ce.s3.us-east-1.amazonaws.com/opus-translate/14/Helsinki-NLP/opus-mt_tiny_eng-ell/model-int8.onnx"
+          "size": 94727718,
+          "url": "https://teradata-opus-translate-ce.s3.us-east-1.amazonaws.com/opus-translate/14/Helsinki-NLP/opus-mt_tiny_eng-ell/model-int8.onnx",
+          "sha256": "961d7dcb1b09cbc8477a151d5a42fd6a9e103bf27e14f0e4e3bdc840e8b6900d"
         },
         "tokenizer.json": {
           "size": 2222026,
@@ -160,8 +168,9 @@
           "url": "https://teradata-opus-translate-ce.s3.us-east-1.amazonaws.com/opus-translate/14/Helsinki-NLP/opus-mt_tiny_eng-fra/model-fp32.onnx"
         },
         "model-int8.onnx": {
-          "size": 94483810,
-          "url": "https://teradata-opus-translate-ce.s3.us-east-1.amazonaws.com/opus-translate/14/Helsinki-NLP/opus-mt_tiny_eng-fra/model-int8.onnx"
+          "size": 94727718,
+          "url": "https://teradata-opus-translate-ce.s3.us-east-1.amazonaws.com/opus-translate/14/Helsinki-NLP/opus-mt_tiny_eng-fra/model-int8.onnx",
+          "sha256": "364ba2cb64cdb02b91d28b21d3433246b51a7572ed2deb068a7f06ae5e33a54d"
         },
         "tokenizer.json": {
           "size": 2108717,
@@ -178,8 +187,9 @@
           "url": "https://teradata-opus-translate-ce.s3.us-east-1.amazonaws.com/opus-translate/14/Helsinki-NLP/opus-mt_tiny_eng-ita/model-fp32.onnx"
         },
         "model-int8.onnx": {
-          "size": 94483810,
-          "url": "https://teradata-opus-translate-ce.s3.us-east-1.amazonaws.com/opus-translate/14/Helsinki-NLP/opus-mt_tiny_eng-ita/model-int8.onnx"
+          "size": 94727718,
+          "url": "https://teradata-opus-translate-ce.s3.us-east-1.amazonaws.com/opus-translate/14/Helsinki-NLP/opus-mt_tiny_eng-ita/model-int8.onnx",
+          "sha256": "7e778c88d688fd1dcf740048e1d8b19d06130eee48b93ac021fe84ff2480072f"
         },
         "tokenizer.json": {
           "size": 2107870,
@@ -196,8 +206,9 @@
           "url": "https://teradata-opus-translate-ce.s3.us-east-1.amazonaws.com/opus-translate/14/Helsinki-NLP/opus-mt_tiny_eng-nld/model-fp32.onnx"
         },
         "model-int8.onnx": {
-          "size": 94483810,
-          "url": "https://teradata-opus-translate-ce.s3.us-east-1.amazonaws.com/opus-translate/14/Helsinki-NLP/opus-mt_tiny_eng-nld/model-int8.onnx"
+          "size": 94727718,
+          "url": "https://teradata-opus-translate-ce.s3.us-east-1.amazonaws.com/opus-translate/14/Helsinki-NLP/opus-mt_tiny_eng-nld/model-int8.onnx",
+          "sha256": "4e118ccadbe07fcd191a97ed96393de51273a9508eb6e79e6debd2570a336ec7"
         },
         "tokenizer.json": {
           "size": 2101632,
@@ -214,8 +225,9 @@
           "url": "https://teradata-opus-translate-ce.s3.us-east-1.amazonaws.com/opus-translate/14/Helsinki-NLP/opus-mt_tiny_eng-rus/model-fp32.onnx"
         },
         "model-int8.onnx": {
-          "size": 94483810,
-          "url": "https://teradata-opus-translate-ce.s3.us-east-1.amazonaws.com/opus-translate/14/Helsinki-NLP/opus-mt_tiny_eng-rus/model-int8.onnx"
+          "size": 94727718,
+          "url": "https://teradata-opus-translate-ce.s3.us-east-1.amazonaws.com/opus-translate/14/Helsinki-NLP/opus-mt_tiny_eng-rus/model-int8.onnx",
+          "sha256": "f0253c615740d5b7e221c5ed4840d40692b7804a1e1320cd4fc4337ab6afdcf0"
         },
         "tokenizer.json": {
           "size": 2247063,
@@ -232,8 +244,9 @@
           "url": "https://teradata-opus-translate-ce.s3.us-east-1.amazonaws.com/opus-translate/14/Helsinki-NLP/opus-mt_tiny_eng-spa/model-fp32.onnx"
         },
         "model-int8.onnx": {
-          "size": 94483810,
-          "url": "https://teradata-opus-translate-ce.s3.us-east-1.amazonaws.com/opus-translate/14/Helsinki-NLP/opus-mt_tiny_eng-spa/model-int8.onnx"
+          "size": 94727718,
+          "url": "https://teradata-opus-translate-ce.s3.us-east-1.amazonaws.com/opus-translate/14/Helsinki-NLP/opus-mt_tiny_eng-spa/model-int8.onnx",
+          "sha256": "912b51c226e41e84d914dffa9a3736c4fa01b6b6bc1b4b81d078274ebb3a0d9d"
         },
         "tokenizer.json": {
           "size": 2110524,
@@ -250,8 +263,9 @@
           "url": "https://teradata-opus-translate-ce.s3.us-east-1.amazonaws.com/opus-translate/14/Helsinki-NLP/opus-mt_tiny_eng-tur/model-fp32.onnx"
         },
         "model-int8.onnx": {
-          "size": 94483810,
-          "url": "https://teradata-opus-translate-ce.s3.us-east-1.amazonaws.com/opus-translate/14/Helsinki-NLP/opus-mt_tiny_eng-tur/model-int8.onnx"
+          "size": 94727718,
+          "url": "https://teradata-opus-translate-ce.s3.us-east-1.amazonaws.com/opus-translate/14/Helsinki-NLP/opus-mt_tiny_eng-tur/model-int8.onnx",
+          "sha256": "a517d628f907e5261cacf2d797460088303fd485955598872a1741491a78e7d8"
         },
         "tokenizer.json": {
           "size": 2118825,
@@ -268,8 +282,9 @@
           "url": "https://teradata-opus-translate-ce.s3.us-east-1.amazonaws.com/opus-translate/14/Helsinki-NLP/opus-mt_tiny_fra-eng/model-fp32.onnx"
         },
         "model-int8.onnx": {
-          "size": 94483810,
-          "url": "https://teradata-opus-translate-ce.s3.us-east-1.amazonaws.com/opus-translate/14/Helsinki-NLP/opus-mt_tiny_fra-eng/model-int8.onnx"
+          "size": 94727718,
+          "url": "https://teradata-opus-translate-ce.s3.us-east-1.amazonaws.com/opus-translate/14/Helsinki-NLP/opus-mt_tiny_fra-eng/model-int8.onnx",
+          "sha256": "6e6492388da4c83ac8a68241af2bbf70858a927a18c056a4a1d4289af3cfdfe5"
         },
         "tokenizer.json": {
           "size": 2108824,
@@ -286,8 +301,9 @@
           "url": "https://teradata-opus-translate-ce.s3.us-east-1.amazonaws.com/opus-translate/14/Helsinki-NLP/opus-mt_tiny_ita-eng/model-fp32.onnx"
         },
         "model-int8.onnx": {
-          "size": 94483810,
-          "url": "https://teradata-opus-translate-ce.s3.us-east-1.amazonaws.com/opus-translate/14/Helsinki-NLP/opus-mt_tiny_ita-eng/model-int8.onnx"
+          "size": 94727718,
+          "url": "https://teradata-opus-translate-ce.s3.us-east-1.amazonaws.com/opus-translate/14/Helsinki-NLP/opus-mt_tiny_ita-eng/model-int8.onnx",
+          "sha256": "c8437c3550ddb2948bb1bf992797659ed1a7c9820b40f170f02cc2999df85cc3"
         },
         "tokenizer.json": {
           "size": 2108148,
@@ -304,8 +320,9 @@
           "url": "https://teradata-opus-translate-ce.s3.us-east-1.amazonaws.com/opus-translate/14/Helsinki-NLP/opus-mt_tiny_kor-eng/model-fp32.onnx"
         },
         "model-int8.onnx": {
-          "size": 94483810,
-          "url": "https://teradata-opus-translate-ce.s3.us-east-1.amazonaws.com/opus-translate/14/Helsinki-NLP/opus-mt_tiny_kor-eng/model-int8.onnx"
+          "size": 94727718,
+          "url": "https://teradata-opus-translate-ce.s3.us-east-1.amazonaws.com/opus-translate/14/Helsinki-NLP/opus-mt_tiny_kor-eng/model-int8.onnx",
+          "sha256": "def59a53fc103d8ca1471be77dfac49fd581f19f438d8a405702e42fec682e15"
         },
         "tokenizer.json": {
           "size": 2110053,
@@ -322,8 +339,9 @@
           "url": "https://teradata-opus-translate-ce.s3.us-east-1.amazonaws.com/opus-translate/14/Helsinki-NLP/opus-mt_tiny_nld-eng/model-fp32.onnx"
         },
         "model-int8.onnx": {
-          "size": 94483810,
-          "url": "https://teradata-opus-translate-ce.s3.us-east-1.amazonaws.com/opus-translate/14/Helsinki-NLP/opus-mt_tiny_nld-eng/model-int8.onnx"
+          "size": 94727718,
+          "url": "https://teradata-opus-translate-ce.s3.us-east-1.amazonaws.com/opus-translate/14/Helsinki-NLP/opus-mt_tiny_nld-eng/model-int8.onnx",
+          "sha256": "355c5b7ef058c4c01606e8465265c065b1c0c5048cc30000e1d96637c4767008"
         },
         "tokenizer.json": {
           "size": 2101781,
@@ -340,8 +358,9 @@
           "url": "https://teradata-opus-translate-ce.s3.us-east-1.amazonaws.com/opus-translate/14/Helsinki-NLP/opus-mt_tiny_rus-eng/model-fp32.onnx"
         },
         "model-int8.onnx": {
-          "size": 94483810,
-          "url": "https://teradata-opus-translate-ce.s3.us-east-1.amazonaws.com/opus-translate/14/Helsinki-NLP/opus-mt_tiny_rus-eng/model-int8.onnx"
+          "size": 94727718,
+          "url": "https://teradata-opus-translate-ce.s3.us-east-1.amazonaws.com/opus-translate/14/Helsinki-NLP/opus-mt_tiny_rus-eng/model-int8.onnx",
+          "sha256": "00f136132186992180213088295f0eae1e7461ebfe8f393f0edbe697dab94128"
         },
         "tokenizer.json": {
           "size": 2246756,
@@ -358,8 +377,9 @@
           "url": "https://teradata-opus-translate-ce.s3.us-east-1.amazonaws.com/opus-translate/14/Helsinki-NLP/opus-mt_tiny_spa-cat/model-fp32.onnx"
         },
         "model-int8.onnx": {
-          "size": 94483810,
-          "url": "https://teradata-opus-translate-ce.s3.us-east-1.amazonaws.com/opus-translate/14/Helsinki-NLP/opus-mt_tiny_spa-cat/model-int8.onnx"
+          "size": 94727718,
+          "url": "https://teradata-opus-translate-ce.s3.us-east-1.amazonaws.com/opus-translate/14/Helsinki-NLP/opus-mt_tiny_spa-cat/model-int8.onnx",
+          "sha256": "1aa91f56806b349080dc82d5ada42d26a47516f885aa2dd6f62e8648e41fd39c"
         },
         "tokenizer.json": {
           "size": 2122466,
@@ -374,6 +394,11 @@
         "model-fp32.onnx": {
           "size": 177301730,
           "url": "https://teradata-opus-translate-ce.s3.us-east-1.amazonaws.com/opus-translate/14/Helsinki-NLP/opus-mt_tiny_spa-eng/model-fp32.onnx"
+        },
+        "model-int8.onnx": {
+          "size": 94727718,
+          "url": "https://teradata-opus-translate-ce.s3.us-east-1.amazonaws.com/opus-translate/14/Helsinki-NLP/opus-mt_tiny_spa-eng/model-int8.onnx",
+          "sha256": "73262cfef939001ed9e4d635619ca27c3cbfdf4668b24258aa22d8ad60b2a603"
         },
         "tokenizer.json": {
           "size": 2110235,
@@ -390,8 +415,9 @@
           "url": "https://teradata-opus-translate-ce.s3.us-east-1.amazonaws.com/opus-translate/14/Helsinki-NLP/opus-mt_tiny_spa-eus/model-fp32.onnx"
         },
         "model-int8.onnx": {
-          "size": 94483810,
-          "url": "https://teradata-opus-translate-ce.s3.us-east-1.amazonaws.com/opus-translate/14/Helsinki-NLP/opus-mt_tiny_spa-eus/model-int8.onnx"
+          "size": 94727718,
+          "url": "https://teradata-opus-translate-ce.s3.us-east-1.amazonaws.com/opus-translate/14/Helsinki-NLP/opus-mt_tiny_spa-eus/model-int8.onnx",
+          "sha256": "b3d8184711abb64b4f3ba8a3f638a7941361770e2d2273eac48e7712c8161239"
         },
         "tokenizer.json": {
           "size": 2120194,
@@ -408,8 +434,9 @@
           "url": "https://teradata-opus-translate-ce.s3.us-east-1.amazonaws.com/opus-translate/14/Helsinki-NLP/opus-mt_tiny_spa-glg/model-fp32.onnx"
         },
         "model-int8.onnx": {
-          "size": 94483810,
-          "url": "https://teradata-opus-translate-ce.s3.us-east-1.amazonaws.com/opus-translate/14/Helsinki-NLP/opus-mt_tiny_spa-glg/model-int8.onnx"
+          "size": 94727718,
+          "url": "https://teradata-opus-translate-ce.s3.us-east-1.amazonaws.com/opus-translate/14/Helsinki-NLP/opus-mt_tiny_spa-glg/model-int8.onnx",
+          "sha256": "f03bc75071b89258cc151d9ee92bd737d8446e8a0f32766fd9e0dd4610ec4d08"
         },
         "tokenizer.json": {
           "size": 2126895,
@@ -426,8 +453,9 @@
           "url": "https://teradata-opus-translate-ce.s3.us-east-1.amazonaws.com/opus-translate/14/Helsinki-NLP/opus-mt_tiny_tur-eng/model-fp32.onnx"
         },
         "model-int8.onnx": {
-          "size": 94483810,
-          "url": "https://teradata-opus-translate-ce.s3.us-east-1.amazonaws.com/opus-translate/14/Helsinki-NLP/opus-mt_tiny_tur-eng/model-int8.onnx"
+          "size": 94727718,
+          "url": "https://teradata-opus-translate-ce.s3.us-east-1.amazonaws.com/opus-translate/14/Helsinki-NLP/opus-mt_tiny_tur-eng/model-int8.onnx",
+          "sha256": "a197d6c63b91d0a98d5a058ad2b42e4b978e999d9fe42c638c9ce2fa952b2202"
         },
         "tokenizer.json": {
           "size": 2119128,
@@ -444,8 +472,9 @@
           "url": "https://teradata-opus-translate-ce.s3.us-east-1.amazonaws.com/opus-translate/14/Helsinki-NLP/opus-mt_tiny_zho-eng/model-fp32.onnx"
         },
         "model-int8.onnx": {
-          "size": 94483810,
-          "url": "https://teradata-opus-translate-ce.s3.us-east-1.amazonaws.com/opus-translate/14/Helsinki-NLP/opus-mt_tiny_zho-eng/model-int8.onnx"
+          "size": 94727718,
+          "url": "https://teradata-opus-translate-ce.s3.us-east-1.amazonaws.com/opus-translate/14/Helsinki-NLP/opus-mt_tiny_zho-eng/model-int8.onnx",
+          "sha256": "fe129ae098b7c0dc1c3a97262efee180ba45a804bd73aaaad42d626536dc9ba6"
         },
         "tokenizer.json": {
           "size": 2045516,
